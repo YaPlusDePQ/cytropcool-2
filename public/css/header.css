@@ -1,0 +1,85 @@
+@font-face {
+    font-family: 'sofia-pro'; /*a name to be used later*/
+    src: url('./font/sofiapro-light.otf'); /*URL to font*/
+}
+
+@font-face {
+    font-family: 'blazed'; /*a name to be used later*/
+    src: url('./font/Blazed.ttf'); /*URL to font*/
+}
+
+@font-face {
+    font-family: 'comicMS'; /*a name to be used later*/
+    src: url('./font/ComicSansMS3.ttf'); /*URL to font*/
+}
+
+*{ 
+    margin: 0px;
+    font-family: sofia-pro, sans-serif;
+}
+
+button{
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    font-size: 16px;
+}
+
+header{
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #123456;
+}
+
+header *{
+    color: white;
+}
+
+.menu h1{
+    width: min-content;
+}
+
+.menu button{
+    background-color: transparent;
+    border: none;
+    float: right;
+}
+
+.menu button img{
+    filter: invert(1);
+    height: 32px;
+}
+
+.nav{
+    position: fixed;
+    background-color: #123456;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    padding-top: 25px;
+    z-index: 99;
+}
+
+.nav li{
+    list-style: none;
+    padding-bottom: 20px;
+}
+
+.nav li *{
+    font-size: 28px;
+    text-decoration: none; 
+    border: none;
+    padding: 0px;
+}
+
+.nav button{
+    background-color: transparent;
+}
+
+.nav-sub li *{
+    font-size: 24px;
+}
+
+div[hidden] {
+    display: none;
+}

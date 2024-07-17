@@ -1,0 +1,12 @@
+@import "../form.css";
+
+
+.form-wrapper{
+    margin-bottom: 10px;
+}
+
+.form select{
+    border: 0;
+    border-bottom: 1px #000 solid;
+    margin-bottom: 10px;
+}
