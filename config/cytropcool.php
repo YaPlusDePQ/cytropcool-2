@@ -5,7 +5,9 @@ return [
             'main_page_article' => 'article',
             'drinks' => 'drink',
             'user_holding' => 'inventory',
-            'holdable' => 'item',
+            'holdable' => 'holdable',
+            'meta_holdable_type' => 'meta_holdable_type',
+            'meta_holdable_category' => 'meta_holdable_category',
             'sessions' => 'session',
             'user_statistiques' => 'statistiques',
 

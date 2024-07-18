@@ -8,7 +8,7 @@ use App\Http\Middleware\StdAuth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RateController;
-use App\Http\Controllers\StyleController;
+use App\Http\Controllers\HoldableController;
 
 
 
@@ -66,13 +66,22 @@ Route::post('/reset-password/{token}', function (Request $request) {
 
 Route::get('/profile', function () {
     return view('account.self', [
-        'currentStyle' => StyleController::getCurrentStyle(Auth::user()->id),
-        'styles' => StyleController::getStyles(Auth::user()->id),
+        'currentHold' => HoldableController::getCurrentHold(Auth::user()->id),
+        'inventory' => HoldableController::getInventory(Auth::user()->id),
         'stats' => ProfileController::getStats(Auth::user()->id),
         'ranks' => ProfileController::getRanks(Auth::user()->id),
         'history' => ProfileController::getSessionsHistory(Auth::user()->id)
-    ]);
-});
+    ]+HoldableController::displayHold([Auth::user()->id]));
+})->middleware([StdAuth::class]);
+
+Route::put('/profile', function (Request $request){
+    return ProfileController::updateUser($request);
+})->middleware([StdAuth::class]);
+
+Route::post('/profile', function (Request $request){
+    return ProfileController::updateHold($request);
+})->middleware([StdAuth::class]);
+
 
 Route::get('/profile/{id}', function (String $id) {
     return view('welcome');
@@ -85,5 +94,5 @@ Route::get('/profile/{id}', function (String $id) {
  */
 
 Route::get('/debug/data-view', function () {
-    return view('debug.data-view', ['data' => StyleController::getStyle(Auth::user()->id)]);
+    return view('debug.data-view',['data'=>HoldableController::getCurrentHold(Auth::user()->id)]);
 })->middleware([StdAuth::class]);

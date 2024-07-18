@@ -1,5 +1,5 @@
 {
-    "badge" : 1,
-    "font" : 2,
-    "color" : 3
+    "display_before" : 1,
+    "display_after" : 4,
+    "style_name":[2,3]
 }

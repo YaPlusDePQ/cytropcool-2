@@ -130,11 +130,18 @@
     margin-top: 5px;
 }
 
-.update-result{
+.failed-msg{
     font-size: 18px;
     color: red;
     margin-top: 10px;
 }
+
+.success-msg{
+    font-size: 18px;
+    color: rgb(0, 191, 0);
+    margin-top: 10px;
+}
+
 
 
 .last-session .session-wrapper{
@@ -294,7 +301,7 @@
     text-align: center;
 }
 
-.displayer-element-content{
+.displayer li div{
     padding: 5px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -302,14 +309,6 @@
     border-radius: 5px;
 }
 
-.displayer-element-name{
+.displayer li p{
     margin-top: 5px;
-}
-
-.displayer .badge{
-    margin-right: 0px;
-}
-
-.displayer .pseudo{
-    color: #000;
 }

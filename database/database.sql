@@ -8,7 +8,7 @@ CREATE TABLE user(
     weight FLOAT NOT NULL DEFAULT 66.0,
     sexe FLOAT NOT NULL DEFAULT 0.6,
     eat TINYINT(1) NOT NULL DEFAULT 0,
-    style LONGTEXT NOT NULL DEFAULT '{ \"badge\" : 1, \"font\" : 2, \"color\" : 3 }'
+    hold LONGTEXT NOT NULL DEFAULT '{ \"display_before\" : 2, \"display_after\" : 1, \"style_name\":[3,4] }'
 );
 
 CREATE TABLE password_reset_tokens(
@@ -65,13 +65,26 @@ CREATE TABLE statistiques(
     FOREIGN KEY fk_statistique_sessionId(session_id) REFERENCES session(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE item(
+CREATE TABLE meta_holdable_type(
+    type VARCHAR(100) NOT NULL PRIMARY KEY
+);
+
+CREATE TABLE meta_holdable_category(
+    category VARCHAR(100) NOT NULL PRIMARY KEY
+);
+
+
+CREATE TABLE holdable(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    type VARCHAR(100),
+    type VARCHAR(100) NULL DEFAULT NULL,
+    category VARCHAR(100) NULL DEFAULT NULL,
     name VARCHAR(100) DEFAULT NULL,
-    data LONGTEXT,
+    data TEXT,
     shop TINYINT(1) NOT NULL DEFAULT 0,
-    price INT NOT NULL DEFAULT 0
+    price INT NOT NULL DEFAULT 0,
+
+    FOREIGN KEY fk_holdable_type(type) REFERENCES meta_holdable_type(type) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY fk_holdable_category(category) REFERENCES meta_holdable_category(category) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE inventory(
@@ -82,7 +95,7 @@ CREATE TABLE inventory(
     CONSTRAINT pk_inventory PRIMARY KEY (user_id,item_id),
 
     FOREIGN KEY fk_inventory_userId(user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY fk_inventory_itemId(item_id) REFERENCES item(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY fk_inventory_itemId(item_id) REFERENCES holdable(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE article(

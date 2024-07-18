@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Hash;
 use Illuminate\Support\Str;
 
-use App\Http\Controllers\StyleController;
+use App\Http\Controllers\HoldableController;
 
 
 class AuthController extends Controller
@@ -94,7 +94,7 @@ class AuthController extends Controller
             ;", 
             [$request->email])[0]->id;
 
-            StyleController::addStyle($id, [1,2,3]);
+            HoldableController::addHoldable($id, [1,2,3,4]);
 
             return Redirect::back()->with(['success' => 'Inscription réussi, tu peux te connecter.']);
         }

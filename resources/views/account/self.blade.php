@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('/css/account/self.css')}}" rel='stylesheet'>
-
+    <script src="{{ asset('/js/account/self.js')}}" rel='stylesheet'></script>
+    <script>window.currentHold = @json($currentHold) </script>
     <title>CYtropcool - Profil</title>
 </head>
 <body>
@@ -12,7 +13,7 @@
     @include('header')
 
     <div class="content">
-        <div id="home">
+        <div id="home" @if(Session::has('hold-failed') || Session::has('hold-success')) {{'hidden'}} @endif>
 
             <div class="info">
                 
@@ -27,26 +28,31 @@
                     <span> Morphologie </span>
                     <h2>{{Auth::user()->sexe == config('cytropcool.constant.male') ? "Homme" : "Femme"}} {{Auth::user()->weight;}}Kg</h2>
                     <span> Cramptés </span>
+
                     <h2>{{Auth::user()->crampte;}}</h2>
+                    <div class="failed-msg" @if(!Session::has('update-failed')) {{'hidden'}} @endif>
+                        @if (Session::has('update-failed'))
+                            {{ Session::get('update-failed') }}
+                        @endif
+                    </div>
+                    <div class="success-msg" @if(!Session::has('update-success')) {{'hidden'}} @endif>
+                        @if (Session::has('update-success'))
+                        {{ Session::get('update-success') }}
+                        @endif
+                    </div>
                 </div>
 
-                <div id="update" hidden>
+                <div id="update" @if(!Session::has('update-failed')) {{'hidden'}} @endif>
                     <div class="section-title">
                         <h1>MISE À JOUR</h1>
                         <button onclick="document.getElementById('update').hidden = true">Annuler</button>
                     </div>
-                    <form id="update-form" class="info-data">
+                    <form id="update-form" class="info-data" method="POST">
                         
                         @csrf
                         <input name="_method" value="PUT" readonly required hidden/>
 
-                        <div class="update-result" @if(!$errors->any()) {{'hidden'}} @endif>
-                            @if ($errors->any())
-                                @foreach ($errors->all() as $error)
-                                    {{ $error }}
-                                @endforeach
-                            @endif
-                        </div>
+                        
 
                         <span> Pseudo </span>
                         <input type="text" name="name" value="{{old('email') ?? Auth::user()->name;}}" required>
@@ -55,7 +61,6 @@
                         <input type="number" name="weight" value="{{old('weight') ?? Auth::user()->weight;}}" required>
 
                         <span> Sexe </span>
-
                         <select type="number" name="sexe" value="{{ old('sexe') ??  Auth::user()->sexe;}}" required>
                             <option value="{{config('cytropcool.constant.male')}}" {{Auth::user()->sexe == config('cytropcool.constant.male') ? 'selected' : ''}}>Homme</option>
                             <option value="{{config('cytropcool.constant.female')}}" {{Auth::user()->sexe == config('cytropcool.constant.female') ? 'selected' : ''}}>Femme</option>
@@ -76,11 +81,16 @@
                 </div>
 
                 <div class="display-wrapper">
-                    <span class="badge" style="{{ $currentStyle->badge->css }}">{{  $currentStyle->badge->text }}</span>
+                    @include('holdable.run.style_name')
 
-                    <span class="pseudo" style="{{  $currentStyle->color->css.$currentStyle->font->css }}">{{ Auth::user()->name }}</span>
+                    @include('holdable.run.display_before')
+
+                    <span class="pseudo _user{{Auth::user()->id}}">{{ Auth::user()->name }}</span>
+
+                    @include('holdable.run.display_after')
                 </div>
                 
+
             </div>
 
             <div class="last-session">
@@ -264,7 +274,7 @@
             </div>
         </div>
 
-        <div id="style" hidden>
+        <div id="style" @if(!Session::has('hold-failed') && !Session::has('hold-success')) {{'hidden'}} @endif>
             <div class="section-title"  style="padding: 10px;background: #202020;color: #fff;">
                 <h2>INVENTAIRE</h2>
                 <button onclick="document.getElementById('style').hidden = true;
@@ -275,102 +285,68 @@
                 <span>Prévisualisation</span>
                 <div class="display-wrapper">
 
-                    <span id="preview-badge" class="badge"  style="{{ $currentStyle->badge->css }}">{{  $currentStyle->badge->text }}</span>
+                    <div id="preview-style_name">
+                        <style>
+                        
+                        </style>
+                    </div>
+                    
+                    <div id="preview-display_before">
 
-                    <span id="preview-pseudo" class="pseudo" style="{{  $currentStyle->color->css.$currentStyle->font->css }}">{{ Auth::user()->name }}</span>
+                    </div>
+                    
+                    <span id="preview-pseudo" class="pseudo _preview ">{{ Auth::user()->name }}</span>
+
+                    <div id="preview-display_after">
+
+                    </div>
 
                 </div>
 
-                <form id="style-form">
+                <form id="style-form" method="POST">
 
-                    <div class="set-style-result" @if(!$errors->any()) {{'hidden'}} @endif>
-                        @if ($errors->any())
-                            @foreach ($errors->all() as $error)
-                                {{ $error }}
-                            @endforeach
+                    <div class="failed-msg" @if(!Session::has('hold-failed')) {{'hidden'}} @endif>
+                        @if (Session::has('hold-failed'))
+                            {{ Session::get('hold-failed') }}
                         @endif
                     </div>
+                    <div class="success-msg" @if(!Session::has('hold-success')) {{'hidden'}} @endif>
+                        @if (Session::has('hold-success'))
+                        {{ Session::get('hold-success') }}
+                        @endif
+                    </div>
+
                     @csrf
-                    <input name="_method" value="PATCH" readonly required hidden/>
+                    <input name="_method" value="POST" readonly required hidden/>
 
+                    @foreach($currentHold as $cat => $hold)
+                        <input type="number" id="input-preview-{{$cat}}" name="{{$cat}}" value="{{$hold->id}}" hidden required readonly>
+                    @endforeach
 
-                    <input type="number" name="badge" hidden required readonly>
-                    <input type="number" name="color" hidden required readonly>
-                    <input type="number" name="font" hidden required readonly>
-
-                    <button type="submit" class="save-style" onclick="set_new_style()">Sauvegarder</button>
+                    <button type="submit" class="save-style">Sauvegarder</button>
                 </form>
 
             </div>
 
+            @foreach($inventory as $cat => $holds)
             <div class="elements-display">
                 <div class="section-title">
-                    <h2>BADGES</h2>
+                    <h2>{{ strtoupper($cat) }}</h2>
                 </div>
 
                 <div class="displayer">
-                    <ul id="badge-displayer">
-                        @foreach($styles as $style)
-                            @if($style->type == "badge")
-                        <li> 
-                            <div class="displayer-element-content"> 
-                                <span class="badge" style="{{ $style->data->css }}">{{$style->data->text == "" ? "Rien" : $style->data->text}}</span> 
-                            </div>  
-                            <div class="displayer-element-name">
-                                <span>{{$style->name}}</span>
-                            </div> 
-                        </li>
-                            @endif
-                        @endforeach
+                    <ul>
+                    @foreach($holds as $h)
+                        @php($_HOLD_INVENTORY_DATA = $h)
+                        @include('holdable.inventory.'.$h->type)
+                    @endforeach
                     </ul>
                 </div>
+
             </div>
+            @endforeach
 
-            <div class="elements-display">
-                <div class="section-title">
-                    <h2>POLICES</h2>
-                </div>
-
-                <div class="displayer">
-                    <ul id="font-displayer">
-                        @foreach($styles as $style)
-                            @if($style->type == "font")
-                        <li> 
-                            <div class="displayer-element-content"> 
-                                <span class="pseudo" style="{{ $style->data->css }}">{{Auth::user()->name}}</span> 
-                            </div>  
-                            <div class="displayer-element-name">
-                                <span>{{$style->name}}</span>
-                            </div> 
-                        </li>
-                            @endif
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-
-            <div class="elements-display">
-                <div class="section-title">
-                    <h2>COULEURS</h2>
-                </div>
-
-                <div class="displayer">
-                    <ul id="color-displayer">
-                        @foreach($styles as $style)
-                            @if($style->type == "color")
-                        <li> 
-                            <div class="displayer-element-content"> 
-                                <span class="pseudo" style="{{ $style->data->css }}">{{Auth::user()->name}}</span> 
-                            </div>  
-                            <div class="displayer-element-name">
-                                <span>{{$style->name}}</span>
-                            </div> 
-                        </li>
-                            @endif
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
+    
         </div>
     </div>
 </body>
