@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
-class StdAuth
+class SessionAuth
 {
     /**
      * Handle an incoming request.
@@ -15,6 +15,6 @@ class StdAuth
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response{
-        return Auth::check() ? $next($request) : redirect('/login')->with(['redirect' => './'.$request->path()]);
+        return Auth::user()->session ? $next($request) : redirect('/cytropivre/search');
     }
 }

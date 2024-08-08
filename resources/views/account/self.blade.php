@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('/css/account/self.css')}}" rel='stylesheet'>
     <script src="{{ asset('/js/account/self.js')}}" rel='stylesheet'></script>
-    <script>window.currentHold = @json($currentHold) </script>
+    <script>window.currentHold = {} </script>
     <title>CYtropcool - Profil</title>
 </head>
 <body>
@@ -23,11 +23,11 @@
                 </div>
 
                 <div class="info-data">
-                    <span> Pseudo </span>
+                    <span class="title"> Pseudo </span>
                     <h1 id="name">{{Auth::user()->name;}}</h1>
-                    <span> Morphologie </span>
+                    <span class="title"> Morphologie </span>
                     <h2>{{Auth::user()->sexe == config('cytropcool.constant.male') ? "Homme" : "Femme"}} {{Auth::user()->weight;}}Kg</h2>
-                    <span> Cramptés </span>
+                    <span class="title"> Cramptés </span>
 
                     <h2>{{Auth::user()->crampte;}}</h2>
                     <div class="failed-msg" @if(!Session::has('update-failed')) {{'hidden'}} @endif>
@@ -81,13 +81,7 @@
                 </div>
 
                 <div class="display-wrapper">
-                    @include('holdable.run.style_name')
-
-                    @include('holdable.run.display_before')
-
-                    <span class="pseudo _user{{Auth::user()->id}}">{{ Auth::user()->name }}</span>
-
-                    @include('holdable.run.display_after')
+                    @include('holdable.run.user')
                 </div>
                 
 
@@ -285,19 +279,16 @@
                 <span>Prévisualisation</span>
                 <div class="display-wrapper">
 
-                    <div id="preview-style_name">
-                        <style>
-                        
-                        </style>
-                    </div>
-                    
-                    <div id="preview-display_before">
+                    <div id="preview-before">
 
                     </div>
-                    
-                    <span id="preview-pseudo" class="pseudo _preview ">{{ Auth::user()->name }}</span>
 
-                    <div id="preview-display_after">
+                    <div id="preview-name">
+
+                        <span id="preview-pseudo" class="pseudo _preview ">{{ Auth::user()->name }}</span>
+                    </div>
+
+                    <div id="preview-after">
 
                     </div>
 
@@ -319,9 +310,13 @@
                     @csrf
                     <input name="_method" value="POST" readonly required hidden/>
 
-                    @foreach($currentHold as $cat => $hold)
-                        <input type="number" id="input-preview-{{$cat}}" name="{{$cat}}" value="{{$hold->id}}" hidden required readonly>
+                    <select name="style-form-selection[]" multiple hidden>
+                    @foreach($inventory as $cat => $data)
+                        @foreach($data as $item)
+                            <option type="number" id="option-item-{{$item->id}}" item-position="before" value="{{$item->id}}" @if($item->hold) selected @endif>
+                        @endforeach
                     @endforeach
+                    </select>
 
                     <button type="submit" class="save-style">Sauvegarder</button>
                 </form>
@@ -336,10 +331,14 @@
 
                 <div class="displayer">
                     <ul>
-                    @foreach($holds as $h)
-                        @php($_HOLD_INVENTORY_DATA = $h)
-                        @include('holdable.inventory.'.$h->type)
-                    @endforeach
+                        @foreach($holds as $h)
+                        <li>
+                            <div class="displayer-element-content"> 
+                                @include('holdable.inventory.show', ['_item' => $h])
+                            </div>
+                            <p>{{$h->name}}</p>
+                        </li>
+                        @endforeach
                     </ul>
                 </div>
 

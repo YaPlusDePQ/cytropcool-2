@@ -10,13 +10,19 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-use App\Http\Controllers\RateController;
 use App\Http\Controllers\HoldableController;
-use \stdClass;
 
+use \stdClass;
 
 class ProfileController extends Controller
 {
+    public static function getUser($userID)
+    {
+        $userTable = config('auth.providers.users.table');
+
+        $user = DB::select("SELECT id,name,crampte FROM $userTable WHERE id=? LIMIT 1;", [$userID]);
+        return $user == [] ? null : $user[0];
+    }
 
     public static function getStats($userID): stdClass
     {
@@ -110,6 +116,25 @@ class ProfileController extends Controller
         GROUP BY
             $statsTable.user_id
         ;");
+
+
+        if($results == []){
+            $results = [];
+            $default = new stdClass();
+            $default->user_id = $userID;
+            $default->max_gl = 0;
+            $default->sum_max_gl = 0;
+            $default->max_alcool_quantity = 0;
+            $default->sum_alcool_quantity = 0;
+            $default->max_pure_alcool_quantity = 0;
+            $default->sum_pure_alcool_quantity = 0;
+            $default->max_glass = 0;
+            $default->sum_glass = 0;
+            $default->max_shot = 0;
+            $default->sum_shot = 0;
+            array_push($results, $default);
+        }
+        
 
         return ProfileController::calculateRanks($results, $userID);
     }

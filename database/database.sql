@@ -4,11 +4,8 @@ CREATE TABLE user(
     password VARCHAR(100) NOT NULL,
     name VARCHAR(100) NOT NULL,
     crampte INT NOT NULL DEFAULT 100,
-    session VARCHAR(10) DEFAULT NULL,
     weight FLOAT NOT NULL DEFAULT 66.0,
     sexe FLOAT NOT NULL DEFAULT 0.6,
-    eat TINYINT(1) NOT NULL DEFAULT 0,
-    hold LONGTEXT NOT NULL DEFAULT '{ \"display_before\" : 2, \"display_after\" : 1, \"style_name\":[3,4] }'
 );
 
 CREATE TABLE password_reset_tokens(
@@ -33,6 +30,17 @@ CREATE TABLE session(
     FOREIGN KEY fk_sessions_admin(admin) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE user_session(
+    user_id INT NOT NULL,
+    session_id VARCHAR(10) NOT NULL,
+    eat  TINYINT(1) NOT NULL DEFAULT 0,
+
+    CONSTRAINT pk_userSession PRIMARY KEY (user_id,session_id),
+
+    FOREIGN KEY fk_userSession_userId(user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY fk_userSession_sessionId(session_id) REFERENCES session(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 CREATE TABLE drink(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     session_id VARCHAR(10) NOT NULL,
@@ -45,6 +53,7 @@ CREATE TABLE drink(
     alcool_degre FLOAT NOT NULL,
     bottoms_up TINYINT(1) NOT NULL DEFAULT 0,
     drink_at DATETIME NOT NULL,
+    hidden TINYINT(1) NOT NULL DEFAULT 0,
 
     FOREIGN KEY fk_drink_sessionId(session_id) REFERENCES session(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY fk_drink_userId(user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -66,24 +75,27 @@ CREATE TABLE statistiques(
 );
 
 CREATE TABLE meta_holdable_type(
-    type VARCHAR(100) NOT NULL PRIMARY KEY
+    id VARCHAR(100) NOT NULL PRIMARY KEY,
+    position VARCHAR(100) NOT NULL,
+    tag VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE meta_holdable_category(
     category VARCHAR(100) NOT NULL PRIMARY KEY
 );
 
-
 CREATE TABLE holdable(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     type VARCHAR(100) NULL DEFAULT NULL,
     category VARCHAR(100) NULL DEFAULT NULL,
     name VARCHAR(100) DEFAULT NULL,
-    data TEXT,
+    data TEXT DEFAULT NULL,
+    only TINYINT(1) NOT NULL DEFAULT 0,
     shop TINYINT(1) NOT NULL DEFAULT 0,
     price INT NOT NULL DEFAULT 0,
+    auto_hold TINYINT(1) NOT NULL DEFAULT 0,
 
-    FOREIGN KEY fk_holdable_type(type) REFERENCES meta_holdable_type(type) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY fk_holdable_type(type) REFERENCES meta_holdable_type(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY fk_holdable_category(category) REFERENCES meta_holdable_category(category) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -91,6 +103,7 @@ CREATE TABLE inventory(
     user_id INT NOT NULL,
     item_id INT NOT NULL,
     bought_at INT NOT NULL DEFAULT 0,
+    hold TINYINT(1) NOT NULL DEFAULT 0,
 
     CONSTRAINT pk_inventory PRIMARY KEY (user_id,item_id),
 
@@ -103,4 +116,22 @@ CREATE TABLE article(
     link VARCHAR(200) NOT NULL,
     title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL
+);
+
+CREATE TABLE gift(
+    token VARCHAR(100) NOT NULL PRIMARY KEY,
+    gift LONGTEXT NOT NULL,
+    html TEXT NULL DEFAULT NULL,
+    receive INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE friends(
+    user_id1 INT NOT NULL,
+    user_id2 INT NOT NULL,
+    accepted TINYINT NOT NULL DEFAULT 0,
+
+    CONSTRAINT pk_inventory PRIMARY KEY (user_id1,user_id2),
+
+    FOREIGN KEY fk_friends_userId1(user_id1) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY fk_friends_itemId2(user_id2) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

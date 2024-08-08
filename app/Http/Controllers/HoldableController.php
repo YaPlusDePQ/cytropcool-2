@@ -10,25 +10,28 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+use App\Http\Controllers\ProfileController;
+
+
 use \Exception;
 use \stdClass;
 
 
 class HoldableController extends Controller
 {
-    public static function addHoldable($userID, array $stylesId)
+    public static function addHoldable($userID, array $style)
     {
         $userHoldingTable = config('cytropcool.database.table.user_holding');
         $styleTable = config('cytropcool.database.table.holdable');
         
-        foreach($stylesId as $style){
+        foreach($styles as $style){
             try{
                 DB::insert("INSERT INTO
                     $userHoldingTable
-                    (user_id , item_id) 
+                    (user_id , item_id, bought_at) 
                 VALUES 
                     (?,?)
-                ;", [$userID, $style]);
+                ;", [$userID, $style->id, $style->price]);
             }
             catch(Exception $e){
                 continue;
@@ -38,83 +41,105 @@ class HoldableController extends Controller
     }
     
     public static function getCurrentHold($userID){
-        $userTable = config('auth.providers.users.table');
-        $holdTable = config('cytropcool.database.table.holdable');
-        
-        $result = json_decode(DB::select("SELECT hold FROM $userTable WHERE id=? LIMIT 1;", [$userID])[0]->hold);
+        $userHoldingTable = config('cytropcool.database.table.user_holding');
+        $holdableTable = config('cytropcool.database.table.holdable');
+        $_metaType = config('cytropcool.database.table.meta_holdable_type');
+
+
         $hold = new stdClass();
-        
-        foreach($result as $type => $holdableId){
-            
-            if(is_array($holdableId)){
-                
-                foreach($holdableId as $hid){
-                    $item =  DB::select("SELECT * FROM $holdTable WHERE id=? LIMIT 1;", [$hid])[0];
-                    $c = $item->category;
-                    $hold->$c = $item;
-                }
+        $hold->id = $userID;
+        $hold->username = ProfileController::getUser($userID)->name;
+
+        $locked = [];
+
+        $userHoldings = DB::select("SELECT
+            $holdableTable.id,
+            $holdableTable.category,
+            $holdableTable.name,
+            $holdableTable.data,
+            $holdableTable.only,
+            $_metaType.id as type,
+            $_metaType.position,
+            $_metaType.tag
+        FROM
+            $userHoldingTable
+        JOIN
+            $holdableTable
+        ON
+            $userHoldingTable.item_id = $holdableTable.id
+        JOIN
+            $_metaType
+        ON
+            $holdableTable.type = $_metaType.id
+        WHERE
+                $userHoldingTable.user_id = ?
+            AND
+                $userHoldingTable.hold = 1
+        ;", [$userID]);
+
+        foreach($userHoldings as $item){
+            $p = $item->position;
+            if(!isset($hold->$p)){
+                $hold->$p = [];
             }
-            else{
-                $item = DB::select("SELECT * FROM $holdTable WHERE id=? LIMIT 1;", [$holdableId])[0];
-                $c = $item->category;
-                $hold->$c = $item;
+
+            if($item->only){
+                array_push($locked, $item->position);
+                $hold->$p = ["$item->tag" => [$item]];
+            }
+            else if( !in_array($item->type, $locked)){
+                if(!isset($hold->$p["$item->tag"])){
+                    $hold->$p["$item->tag"] = [];
+                }
+                array_push($hold->$p["$item->tag"], $item);
             }
         }
-        
         return $hold;
     }
     
-    public static function displayHold(array $userIDs){
-        $userTable = config('auth.providers.users.table');
-        $holdTable = config('cytropcool.database.table.holdable');
-        
-        $hold = [];
-        
+    public static function displayHold(array $userIDs, array $customUserNameClass = []){
+        $runVariable = new stdClass();
+        $runVariable->cui = 0;
+        $runVariable->user = [];
+        $runVariable->customClass = implode(' ',$customUserNameClass);
         
         foreach($userIDs as $id){
-            $result = json_decode(DB::select("SELECT hold FROM $userTable WHERE id=? LIMIT 1;", [$id])[0]->hold);
-            $buffer = new stdClass();
-            $buffer->userId = $id;
-            
-            foreach($result as $type => $holdableId){
-                
-                if(is_array($holdableId)){
-                    $buffer->$type = [];
-                    
-                    foreach($holdableId as $hid){
-                        array_push($buffer->$type, DB::select("SELECT id,data FROM $holdTable WHERE id=? LIMIT 1;", [$hid])[0]);
-                    }
-                }
-                else{
-                    $buffer->$type = DB::select("SELECT id,data FROM $holdTable WHERE id=? LIMIT 1;", [$holdableId])[0];
-                }
-            }
-            
-            array_push($hold, $buffer);
-            
+            array_push($runVariable->user, self::getCurrentHold($id));
         }
+
+        $runVariable->currentUser = $runVariable->user[$runVariable->cui];
         
-        return ["_HOLD_RUN_CURRENT_USER" => 0, "_HOLD_RUN_DATA" => $hold];
+        return ["_HOLD_RUN" => $runVariable];
     }
     
     public static function getInventory($userID){
         $userHoldingTable = config('cytropcool.database.table.user_holding');
         $styleTable = config('cytropcool.database.table.holdable');
+        $_metaType = config('cytropcool.database.table.meta_holdable_type');
         
         $styles = DB::select("SELECT
             $styleTable.id,
-            $styleTable.type,
             $styleTable.category,
             $styleTable.name,
-            $styleTable.data
+            $styleTable.data,
+            $userHoldingTable.hold,
+            $_metaType.id as type,
+            $_metaType.position,
+            $_metaType.tag
         FROM
             $styleTable
-        JOIN
+        LEFT JOIN
             $userHoldingTable
         ON
             $styleTable.id = $userHoldingTable.item_id 
+        JOIN
+            $_metaType
+        ON
+            $styleTable.type = $_metaType.id
         WHERE
             $userHoldingTable.user_id = ?
+            OR
+            $styleTable.auto_hold = 1
         ORDER BY
             $styleTable.id ASC
         ;", [$userID]);
@@ -134,5 +159,14 @@ class HoldableController extends Controller
         
         
         return $inventory;
+    }
+
+    public static function displayInventory(int $userID, array $customUserNameClass = []){
+        $runVariable = new stdClass();
+        $runVariable->username = ProfileController::getUser($userID)->name;
+        $runVariable->customClass = implode(' ',$customUserNameClass);
+        $runVariable->toDisplay = null; 
+
+        return ["_INVENTORY_RUN" => $runVariable];
     }
 }

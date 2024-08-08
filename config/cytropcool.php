@@ -9,6 +9,7 @@ return [
             'meta_holdable_type' => 'meta_holdable_type',
             'meta_holdable_category' => 'meta_holdable_category',
             'sessions' => 'session',
+            'user_session' => 'user_session',
             'user_statistiques' => 'statistiques',
 
             'user' => 'user',
@@ -18,10 +19,10 @@ return [
     'constant' => [
         'male' => 0.7,
         'female' => 0.6,
-        'decay' => 0.20/3600,
-        'time_before_decay' => 30*60,
+        'decay' => 0.30/3600,
+        'time_before_decay' => 25*60,
         'time_to_max_eat' => 50*60,
-        'time_to_max_no_eat' => 30*60,
+        'time_to_max_no_eat' => 25*60,
         'time_to_max_bottoms_up' => 5*60,
         'time_to_max_no_bottoms_up' => 10*60
     ]

@@ -1,16 +1,18 @@
 .content{
     margin-left: 30px;
     margin-right: 30px;
+    margin-top: 10px;
 }
 
 .form-wrapper{
     margin-top: 5px;
     padding-left: 20px;
     padding-right: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border: 1px solid #000;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #c2c2c2;
     border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-wrapper *{
@@ -29,17 +31,18 @@
 
 .form input{
     border: 0;
-    border-bottom: 1px #000 solid;
+    border-bottom: 1px #c2c2c2 solid;
     margin-bottom: 5px;
 }
 
 .form button{
     font-size: 18px;
-    border-radius: 2px;
+    border-radius: 5px;
     border-style: none;
     background-color: #123456;
     color: white;
-    padding: 3px;
+    padding: 5px;
+    padding-top: 3px;
     padding-left: 20px;
     padding-right: 20px;
     margin: auto;
