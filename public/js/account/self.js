@@ -1,42 +1,32 @@
 
-function onClickHoldElement(){
-    let data = JSON.parse(this.getAttribute("json"));
-    window.currentHold[data["category"]] = data;
-    document.getElementById('input-preview-'+data["category"]).value = data["id"];
+function onClickHoldElement(id, category){
+    
+    document.getElementById('load-preview').hidden = false;
+
+    let other = document.querySelectorAll('option[category="'+category+'"]');
+    for(let i in other){
+        other[i].selected = false;
+    }
+    document.getElementById('save-hold-'+id).selected = true;
     previewUpdate();
 }
 
 function previewUpdate(){
-    let typeSpace = null;
-    let styleCleaned = false;
-    for(let category in window.currentHold){
-        typeSpace = document.getElementById("preview-"+window.currentHold[category]["type"]);
+    var form = new FormData(document.getElementById("save-holdable-form"));
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200){
+            document.getElementById('preview').innerHTML = this.response;
+            document.getElementById('load-preview').hidden = true;
+
+        }
+        else if(this.readyState == 4 && this.status == 200){
+            document.getElementById('load-preview').hidden = true;
+            
+        }
         
-
-        if(window.currentHold[category]["type"].includes("style")){
-           
-            if(styleCleaned){
-                typeSpace.children[0].innerHTML += window.currentHold[category]["data"]+";";
-            }
-            else{
-                typeSpace.children[0].innerHTML = "._preview {"+ window.currentHold[category]["data"]+";";
-                styleCleaned = true;
-            }
-        }
-        else{
-            typeSpace.innerHTML = window.currentHold[category]["data"];
-        }
     }
+
+    xhttp.open("POST", "./holdable/preview");
+    xhttp.send(form)
 }
-
-
-window.currentHold = {};
-
-document.addEventListener('DOMContentLoaded', function() {
-    previewUpdate();
-    allHoldableContainer = document.querySelectorAll('li[json]');
-
-    for(let i=0; i < allHoldableContainer.length; i++){
-        allHoldableContainer[i].addEventListener("click", onClickHoldElement, false);
-    }
-}, false);

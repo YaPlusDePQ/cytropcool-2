@@ -4,7 +4,7 @@
     <{{$tag}}>
 
         @if($tag == 'style')
-            ._user{{$_HOLD_RUN->currentUser->id}}{
+            .{{$_HOLD_RUN->userIdClass}}{{$_HOLD_RUN->currentUser->id}}{
         @endif
 
         @foreach($_HOLD_RUN->currentUser->name[$tag] as $item)

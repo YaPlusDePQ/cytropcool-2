@@ -74,10 +74,8 @@ CREATE TABLE statistiques(
     FOREIGN KEY fk_statistique_sessionId(session_id) REFERENCES session(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE meta_holdable_type(
-    id VARCHAR(100) NOT NULL PRIMARY KEY,
-    position VARCHAR(100) NOT NULL,
-    tag VARCHAR(100) NOT NULL
+CREATE TABLE meta_holdable_position(
+    position VARCHAR(100) NOT NULL PRIMARY KEY
 );
 
 CREATE TABLE meta_holdable_category(
@@ -86,17 +84,17 @@ CREATE TABLE meta_holdable_category(
 
 CREATE TABLE holdable(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    type VARCHAR(100) NULL DEFAULT NULL,
     category VARCHAR(100) NULL DEFAULT NULL,
+    position VARCHAR(100) NULL DEFAULT NULL,
+    tag VARCHAR(100) NULL DEFAULT NULL,
     name VARCHAR(100) DEFAULT NULL,
     data TEXT DEFAULT NULL,
-    only TINYINT(1) NOT NULL DEFAULT 0,
     shop TINYINT(1) NOT NULL DEFAULT 0,
     price INT NOT NULL DEFAULT 0,
     auto_hold TINYINT(1) NOT NULL DEFAULT 0,
 
-    FOREIGN KEY fk_holdable_type(type) REFERENCES meta_holdable_type(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY fk_holdable_category(category) REFERENCES meta_holdable_category(category) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY fk_holdable_category(category) REFERENCES meta_holdable_category(category) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY fk_holdable_position(position) REFERENCES meta_holdable_position(position) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE inventory(

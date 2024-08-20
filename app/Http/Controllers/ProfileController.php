@@ -195,77 +195,36 @@ class ProfileController extends Controller
     }
 
     public static function updateHold(Request $request){
-        $userTable = config('auth.providers.users.table');
         $userHoldingTable = config('cytropcool.database.table.user_holding');
-        $holdTable = config('cytropcool.database.table.holdable');
-        $meta_typeTable = config('cytropcool.database.table.meta_holdable_type');
-
-        $userHold = HoldableController::getCurrentHold(Auth::user()->id);
-
-        foreach($request->all() as $category => $value){
-            if(str_starts_with($category, "_") || $category == "name" || $category == "weight" || $category == "sexe"){
-                continue;
-            }
-
-            $item = DB::select("SELECT
-                $holdTable.id,
-                $holdTable.type,
-                $holdTable.category,
-                $holdTable.name,
-                $holdTable.data
-            FROM
-                $userHoldingTable
-            JOIN
-                $holdTable
-            ON
-                $userHoldingTable.item_id = $holdTable.id
-            WHERE
-                item_id = ?
-                AND
-                user_id = ?
-                AND
-                $holdTable.category = ?
-            LIMIT 1
-            ;", [$request->$category, Auth::user()->id, $category]);
 
 
-            if(count($item) == 1){
-                $userHold->$category = $item[0];
-            }
-            else{
-                return Redirect::back()->with(["hold-failed" => "Tu ne possède pas cet élèment ou il n'existe pas"])->withInput();
-            }
+       $validator = Validator::make($request->all(), [
+            'saveHolds'   => 'required|array',
+            'saveHolds.*' => 'integer'
+        ]);
+
+        if ($validator->fails()) {
+            return Redirect::back()->with(["hold-failed" => $validator->errors()->first()]);
+        }
+        else{
+            HoldableController::setHoldable(Auth::user()->id, $request->saveHolds);
+            return Redirect::back()->with(["hold-success" => "Ton style a été mit à jour !"]);
         }
 
-        $metaType = DB::select("SELECT * FROM $meta_typeTable");
+    }
 
-        $newUserHold = new stdClass();
+    public static function previewHold(Request $request){
+        $validator = Validator::make($request->all(), [
+            'saveHolds'   => 'required|array',
+            'saveHolds.*' => 'integer'
+        ]);
 
-        foreach($metaType as $mt){
-            $type = $mt->type;
-            $newUserHold->$type = $mt->array ? [] : 0;
+        if ($validator->fails()) {
+            return view('holdable.run.user', HoldableController::displayHold([Auth::user()->id], ['pseudo']));
         }
-
-        foreach($userHold as $category => $_){
-            $type = $userHold->$category->type;
-            if(is_array($newUserHold->$type)){
-                array_push($newUserHold->$type, $userHold->$category->id);
-            }
-            else{
-                $newUserHold->$type = $userHold->$category->id;
-            }
+        else{
+            return view('holdable.run.user', HoldableController::displayHoldPreview(Auth::user()->id, ['pseudo'], $request->saveHolds, '_preview_user'));
         }
-
-        DB::update("UPDATE 
-            $userTable 
-        SET
-            hold=?
-        WHERE
-            id=?
-        ;", [json_encode($newUserHold), Auth::user()->id]);
-
-        return Redirect::back()->with(["hold-success" => "Ton style a été mit à jour !"])->withInput();
-
     }
 
 }

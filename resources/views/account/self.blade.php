@@ -277,24 +277,14 @@
 
             <div class="style-display">
                 <span>Prévisualisation</span>
-                <div class="display-wrapper">
-
-                    <div id="preview-before">
-
+                <div class="display-wrapper" >
+                    <div id="preview">
+                        @include('holdable.run.user')
                     </div>
-
-                    <div id="preview-name">
-
-                        <span id="preview-pseudo" class="pseudo _preview ">{{ Auth::user()->name }}</span>
-                    </div>
-
-                    <div id="preview-after">
-
-                    </div>
-
+                    <img id='load-preview' src="{{ asset('./img/loading.gif') }}" style='width:31px;' hidden>
                 </div>
 
-                <form id="style-form" method="POST">
+                <form id="save-holdable-form" method="POST">
 
                     <div class="failed-msg" @if(!Session::has('hold-failed')) {{'hidden'}} @endif>
                         @if (Session::has('hold-failed'))
@@ -310,10 +300,10 @@
                     @csrf
                     <input name="_method" value="POST" readonly required hidden/>
 
-                    <select name="style-form-selection[]" multiple hidden>
+                    <select name="saveHolds[]" multiple hidden>
                     @foreach($inventory as $cat => $data)
                         @foreach($data as $item)
-                            <option type="number" id="option-item-{{$item->id}}" item-position="before" value="{{$item->id}}" @if($item->hold) selected @endif>
+                            <option type="number" id="save-hold-{{$item->id}}" category="{{$item->category}}" value="{{$item->id}}" @if($item->hold) selected @endif>
                         @endforeach
                     @endforeach
                     </select>
@@ -332,7 +322,7 @@
                 <div class="displayer">
                     <ul>
                         @foreach($holds as $h)
-                        <li>
+                        <li onclick='onClickHoldElement({{$h->id}}, "{{$h->category}}")'>
                             <div class="displayer-element-content"> 
                                 @include('holdable.inventory.show', ['_item' => $h])
                             </div>

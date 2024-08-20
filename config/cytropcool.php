@@ -6,7 +6,7 @@ return [
             'drinks' => 'drink',
             'user_holding' => 'inventory',
             'holdable' => 'holdable',
-            'meta_holdable_type' => 'meta_holdable_type',
+            'meta_holdable_position' => 'meta_holdable_position',
             'meta_holdable_category' => 'meta_holdable_category',
             'sessions' => 'session',
             'user_session' => 'user_session',

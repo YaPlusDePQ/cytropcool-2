@@ -83,12 +83,16 @@ Route::post('/profile', function (Request $request){
     return ProfileController::updateHold($request);
 })->middleware([StdAuth::class]);
 
+Route::post('/holdable/preview', function (Request $request) {
+    return ProfileController::previewHold($request);
+})->middleware([StdAuth::class]);
+
 Route::get('/profile/{userID}', function (String $userID) {
     $user = ProfileController::getUser($userID);
     if($user != null){
         return view('account.public', [
             'user' => $user,
-            'inventory' => HoldableController::getInventory(Auth::user()->id),
+            'inventory' => HoldableController::getInventory(Auth::user()->id, false),
             'stats' => ProfileController::getStats(Auth::user()->id),
             'ranks' => ProfileController::getRanks(Auth::user()->id),
         ]

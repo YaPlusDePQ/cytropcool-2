@@ -19,18 +19,55 @@ use \stdClass;
 
 class HoldableController extends Controller
 {
-    public static function addHoldable($userID, array $style)
-    {
+
+    public static function filterHoldable($userID, array $holdableIds){
+        $userHoldingTable = config('cytropcool.database.table.user_holding');
+        $holdableTable = config('cytropcool.database.table.holdable');
+
+        $ids = implode(',', $holdableIds);
+
+        $askedHoldable = DB::select("SELECT 
+            * 
+        FROM 
+            $holdableTable 
+        JOIN
+            $userHoldingTable
+        ON
+            $holdableTable.id = $userHoldingTable.item_id 
+        WHERE
+            $userHoldingTable.user_id = ?
+            AND
+            $holdableTable.id IN ($ids)
+            ;
+        ", [$userID]);
+
+        $filterdHoldable = [];
+        $category = [];
+        foreach( $askedHoldable as $item ){
+            if( $item->category == null || $item->position == null || $item->tag == null){
+                continue;
+            }
+
+            if(!in_array( $item->category, $category)){
+                array_push($category, $item->category);
+                array_push($filterdHoldable, $item->id);
+            }
+        }
+
+        return $filterdHoldable;
+    }
+
+    public static function addHoldable($userID, array $style){
         $userHoldingTable = config('cytropcool.database.table.user_holding');
         $styleTable = config('cytropcool.database.table.holdable');
         
         foreach($styles as $style){
             try{
-                DB::insert("INSERT INTO
+                DB::update("INSERT INTO
                     $userHoldingTable
                     (user_id , item_id, bought_at) 
                 VALUES 
-                    (?,?)
+                    (?,?,?,0)
                 ;", [$userID, $style->id, $style->price]);
             }
             catch(Exception $e){
@@ -39,70 +76,121 @@ class HoldableController extends Controller
             
         }
     }
-    
-    public static function getCurrentHold($userID){
+
+    public static function setHoldable($userID, array $holdableIds){
         $userHoldingTable = config('cytropcool.database.table.user_holding');
         $holdableTable = config('cytropcool.database.table.holdable');
-        $_metaType = config('cytropcool.database.table.meta_holdable_type');
 
+        $filteredIds = self::filterHoldable($userID, $holdableIds);
+        if(count($filteredIds) == 0){
+            $filteredIds = [-1];
+        }
+
+        $ids = implode(',', $filteredIds);
+
+        DB::update("UPDATE 
+            $userHoldingTable 
+        SET
+            hold=(item_id IN ($ids))
+        WHERE
+            user_id=?
+        ;", 
+        [$userID]);
+    }
+    
+    public static function getCurrentHold($userID, array $holdableIds = []){
+        $userHoldingTable = config('cytropcool.database.table.user_holding');
+        $holdableTable = config('cytropcool.database.table.holdable');
 
         $hold = new stdClass();
         $hold->id = $userID;
         $hold->username = ProfileController::getUser($userID)->name;
 
-        $locked = [];
+        $userHoldings = [];
 
-        $userHoldings = DB::select("SELECT
-            $holdableTable.id,
-            $holdableTable.category,
-            $holdableTable.name,
-            $holdableTable.data,
-            $holdableTable.only,
-            $_metaType.id as type,
-            $_metaType.position,
-            $_metaType.tag
-        FROM
-            $userHoldingTable
-        JOIN
-            $holdableTable
-        ON
-            $userHoldingTable.item_id = $holdableTable.id
-        JOIN
-            $_metaType
-        ON
-            $holdableTable.type = $_metaType.id
-        WHERE
-                $userHoldingTable.user_id = ?
-            AND
-                $userHoldingTable.hold = 1
-        ;", [$userID]);
+        if(count($holdableIds) == 0){
+            $userHoldings = DB::select("SELECT
+                *
+            FROM
+                $holdableTable
+            JOIN
+                $userHoldingTable
+            ON
+                $holdableTable.id = $userHoldingTable.item_id
+
+            WHERE
+                    $userHoldingTable.user_id = ?
+                AND 
+                    $userHoldingTable.hold = 1
+
+                
+            ;", [$userID]);
+        }
+        else{
+
+            $filteredIds = self::filterHoldable($userID, $holdableIds);
+            if(count($filteredIds) > 0){
+                $ids = implode(',', $filteredIds);
+                $userHoldings = DB::select("SELECT
+                    *
+                FROM
+                    $holdableTable
+                WHERE
+                    $holdableTable.id IN ($ids)
+                ;");
+            }
+            
+        }
+        
+
+        $defaultHoldable = DB::select("SELECT * FROM $holdableTable WHERE name = 'default' AND auto_hold = 1;");
+
+        $category = [];
+        foreach( $userHoldings as $item ){
+            if( $item->category == null || $item->position == null || $item->tag == null){
+                continue;
+            }
+
+            if(!in_array( $item->category, $category)){
+                array_push($category, $item->category);
+            }
+        }
+
+        foreach( $defaultHoldable as $dfh ){
+            if( $dfh->category == null || $dfh->position == null || $dfh->tag == null){
+                continue;
+            }
+
+            if(!in_array( $dfh->category, $category)){
+                array_push($userHoldings, $dfh);
+            }
+        }
 
         foreach($userHoldings as $item){
+            if( $item->category == null || $item->position == null || $item->tag == null){
+                continue;
+            }
+
             $p = $item->position;
             if(!isset($hold->$p)){
                 $hold->$p = [];
             }
 
-            if($item->only){
-                array_push($locked, $item->position);
-                $hold->$p = ["$item->tag" => [$item]];
+            if(!isset($hold->$p["$item->tag"])){
+                $hold->$p["$item->tag"] = [];
             }
-            else if( !in_array($item->type, $locked)){
-                if(!isset($hold->$p["$item->tag"])){
-                    $hold->$p["$item->tag"] = [];
-                }
-                array_push($hold->$p["$item->tag"], $item);
-            }
+            array_push($hold->$p["$item->tag"], $item);
         }
         return $hold;
     }
     
-    public static function displayHold(array $userIDs, array $customUserNameClass = []){
+    public static function displayHold(array $userIDs, array $customUserNameClass = [], $userIdClass = '_user'){
         $runVariable = new stdClass();
         $runVariable->cui = 0;
         $runVariable->user = [];
         $runVariable->customClass = implode(' ',$customUserNameClass);
-        
+        $runVariable->userIdClass = $userIdClass;
+
         foreach($userIDs as $id){
             array_push($runVariable->user, self::getCurrentHold($id));
         }
@@ -112,37 +200,40 @@ class HoldableController extends Controller
         return ["_HOLD_RUN" => $runVariable];
     }
     
-    public static function getInventory($userID){
+    public static function displayHoldPreview($userID, array $customUserNameClass = [], array $holdableIds, $userIdClass = '_user'){
+        $runVariable = new stdClass();
+        $runVariable->cui = 0;
+        $runVariable->user = [];
+        $runVariable->customClass = implode(' ',$customUserNameClass);
+        $runVariable->userIdClass = $userIdClass;
+
+        array_push($runVariable->user, self::getCurrentHold($userID, $holdableIds));
+
+        $runVariable->currentUser = $runVariable->user[$runVariable->cui];
+
+        return ["_HOLD_RUN" => $runVariable];
+    }
+
+    
+    public static function getInventory($userID, $autoHold = true){
         $userHoldingTable = config('cytropcool.database.table.user_holding');
         $styleTable = config('cytropcool.database.table.holdable');
-        $_metaType = config('cytropcool.database.table.meta_holdable_type');
         
         $styles = DB::select("SELECT
-            $styleTable.id,
-            $styleTable.category,
-            $styleTable.name,
-            $styleTable.data,
-            $userHoldingTable.hold,
-            $_metaType.id as type,
-            $_metaType.position,
-            $_metaType.tag
+           *
         FROM
             $styleTable
         LEFT JOIN
             $userHoldingTable
         ON
             $styleTable.id = $userHoldingTable.item_id 
-        JOIN
-            $_metaType
-        ON
-            $styleTable.type = $_metaType.id
         WHERE
             $userHoldingTable.user_id = ?
             OR
-            $styleTable.auto_hold = 1
+            ($styleTable.auto_hold = 1 AND ?)
         ORDER BY
             $styleTable.id ASC
-        ;", [$userID]);
+        ;", [$userID, $autoHold]);
         
         $inventory = new stdClass();
         
