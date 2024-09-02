@@ -26,6 +26,10 @@
                     <span  class="title"> Cramptés </span>
 
                     <h2>{{$user->crampte;}}</h2>
+
+                    <span  class="title"> Valeur du profil </span>
+
+                    <h2>{{$inventoryCost}}</h2>
                 </div>
                
             </div>

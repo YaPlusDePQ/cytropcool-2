@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\CytropivreController;
+
 class SessionAuth
 {
     /**
@@ -15,6 +17,6 @@ class SessionAuth
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response{
-        return Auth::user()->session ? $next($request) : redirect('/cytropivre/search');
+        return CytropivreController::getSession(Auth::user()->id) != null ? $next($request) : redirect('/cytropivre/search');
     }
 }

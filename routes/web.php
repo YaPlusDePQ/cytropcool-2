@@ -4,11 +4,13 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 use App\Http\Middleware\StdAuth;
+use App\Http\Middleware\SessionAuth;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HoldableController;
 use App\Http\Controllers\CytropivreController;
+
 
 
 Route::get('/', function () {
@@ -89,12 +91,21 @@ Route::post('/holdable/preview', function (Request $request) {
 
 Route::get('/profile/{userID}', function (String $userID) {
     $user = ProfileController::getUser($userID);
+    $inventory = HoldableController::getInventory(Auth::user()->id, false);
+    $cost = 0;
+    foreach($inventory as $cat => $holds){
+        foreach($holds as $h){
+            $cost += $h->bought_at;
+        }
+    }
+
     if($user != null){
         return view('account.public', [
             'user' => $user,
-            'inventory' => HoldableController::getInventory(Auth::user()->id, false),
+            'inventory' => $inventory,
             'stats' => ProfileController::getStats(Auth::user()->id),
             'ranks' => ProfileController::getRanks(Auth::user()->id),
+            'inventoryCost' => $cost
         ]
         +HoldableController::displayHold([$userID], ['public_pseudo'])
         +HoldableController::displayInventory($userID, ['public_displayer_pseudo'])
@@ -116,11 +127,74 @@ Route::get('/profile/{userID}', function (String $userID) {
 
 Route::get('/cytropivre/create', function(){
     return view('cytropivre.create');
-});
+})->middleware([StdAuth::class]);
 
 Route::post('/cytropivre/create', function(Request $request){
     return CytropivreController::createSession($request);
-});
+})->middleware([StdAuth::class]);
+
+Route::get('/cytropivre/search', function(){
+    return view('cytropivre.search', ['sessions' => CytropivreController::getPublicSession()]);
+})->middleware([StdAuth::class]);
+
+Route::post('/cytropivre/search', function(Request $request){
+    return CytropivreController::joinSession($request);
+})->middleware([StdAuth::class]);
+
+Route::get('/cytropivre/join/{sessionId}', function($sessionId){
+    return CytropivreController::joinSessionLink($sessionId);
+})->middleware([StdAuth::class]);
+
+Route::get('/cytropivre/session', function(){
+    $userSessionTable = config('cytropcool.database.table.user_session');
+
+    $drinks = CytropivreController::getDrink();
+    $eat = DB::select("SELECT eat FROM $userSessionTable WHERE user_id = ?", [Auth::user()->id])[0]->eat;
+
+    $dt = new DateTime("now", new DateTimeZone('Europe/Paris'));
+    $dt->setTimestamp(time());
+
+    return view('cytropivre.session', [
+        'session' => CytropivreController::getSessionData(CytropivreController::getSession(Auth::user()->id)),
+        'eat' => $eat,
+        'rate' => CytropivreController::getCurrentRateOfUser($drinks, Auth::user()->sexe, Auth::user()->weight, $eat),
+        'drinks' => $drinks,
+        'date' => $dt->format('Y-m-d\TH:i')
+    ]+HoldableController::displayHold([Auth::user()->id]));
+})->middleware([StdAuth::class, SessionAuth::class]);
+
+Route::patch('/cytropivre/session', function(Request $request){
+    return CytropivreController::setEat($request);
+})->middleware([StdAuth::class, SessionAuth::class]);
+
+Route::post('/cytropivre/session', function(Request $request){
+    return CytropivreController::addDrink($request);
+})->middleware([StdAuth::class, SessionAuth::class]);
+
+Route::put('/cytropivre/session', function(Request $request){
+    return CytropivreController::updateDrink($request);
+})->middleware([StdAuth::class, SessionAuth::class]);
+
+Route::delete('/cytropivre/session', function(Request $request){
+    if(isset($request->delete_session)){
+        return CytropivreController::quitSession();
+    }
+    else{
+        return CytropivreController::deleteDrink($request);
+    }
+})->middleware([StdAuth::class, SessionAuth::class]);
+
+Route::get('/cytropivre/scoreboard', function(){
+    $sessionId = CytropivreController::getSession(Auth::user()->id);
+
+    return view('cytropivre.scoreboard', CytropivreController::getScoreboard($sessionId));
+})->middleware([StdAuth::class, SessionAuth::class]);
+
+Route::get('/cytropivre/scoreboard/update', function(){
+    $sessionId = CytropivreController::getSession(Auth::user()->id);
+
+    return view('cytropivre.sbInside', CytropivreController::getScoreboard($sessionId));
+})->middleware([StdAuth::class, SessionAuth::class]);
 
 /**
  * ########################################################################
@@ -129,7 +203,7 @@ Route::post('/cytropivre/create', function(Request $request){
  */
 
 Route::get('/debug/data-view', function () {
-    return view('debug.data-view',['data'=>HoldableController::getInventory(Auth::user()->id)]);
+    return view('debug.data-view',['data'=>CytropivreController::getDrink()]);
 })->middleware([StdAuth::class]);
 
 Route::get('/debug/test', function () {

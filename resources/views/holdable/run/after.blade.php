@@ -1,7 +1,7 @@
 @if(isset($_HOLD_RUN->currentUser->after))
     @foreach($_HOLD_RUN->currentUser->after as $tag => $d)
 
-    <{{$tag}}>
+    <{{$tag}} @if($tag != 'style') style="display:flex" @endif>
 
         @if($tag == 'style')
             ._after{{$_HOLD_RUN->userIdClass}}{{$_HOLD_RUN->currentUser->id}}{

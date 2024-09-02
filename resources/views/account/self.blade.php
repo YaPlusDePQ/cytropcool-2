@@ -19,6 +19,7 @@
                 
                 <div class="section-title">
                     <h1>PROFIL</h1>
+                    <button onclick="navigator.clipboard.writeText('{{url('/profile/'.Auth::user()->id)}}');alert('Le lien vers ton profil a été copié !');" style="margin-right:20px">Partager</button>
                     <button onclick="document.getElementById('update').hidden = !document.getElementById('update').hidden">Modifier</button>
                 </div>
 

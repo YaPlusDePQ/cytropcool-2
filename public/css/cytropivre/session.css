@@ -1,0 +1,446 @@
+.failed-msg{
+    padding-top: 10px;
+    color:red;
+}
+
+.success-msg{
+    margin-top: 10px;
+    color:rgb(35, 212, 0);
+}
+
+button{
+    font-size: inherit;
+    background-color: #fff;
+    border: 1px #bbb solid;
+    border-radius: 2px;
+    margin-top: 5px;
+}
+
+
+.session-title{
+    border-top: 1px #bbb solid;
+    padding: 10px;
+    background-color:#123456;
+    
+}
+
+.session-title h1{
+    color: #fff;
+}
+
+.share-button{
+    background-color: transparent;
+    border: none;
+    padding: 0px;
+}
+
+.share{
+    height: 20px;
+}
+
+
+.session-title h2{
+    margin-top: 10px;
+    color: #bbb;
+    font-weight: normal;
+}
+
+.session-action{
+    padding: 5px;
+    background: transparent;
+    border: 1px rgb(247, 79, 79) solid;
+    font-size: 16px;
+    color: rgb(247, 79, 79);
+}
+
+
+
+.section-title {
+    text-align: right;
+}
+
+.section-title button{
+    padding: 0px;
+    background: transparent;
+    border: 0;
+    font-size: 18px;
+    color: #2494b6
+}
+
+/* INFO SECTION */
+
+.info{
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 30px;
+    background-color: #124656;
+    color: white;
+}
+
+.info-data{
+    font-size: 18px;
+}
+
+.info-data h2{
+    font-weight: normal;
+}
+
+.display-wrapper{
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+}
+
+.info-data .title{
+    color: #bbb;
+}
+
+.eat option{
+    font-size: 18px;
+    color:#000;
+}
+
+.eat select{
+    font-size: 24px;
+    border: none;
+    border-bottom: solid #fff 1px;
+    background-color: transparent;
+    color:#fff;
+}
+/* STATS SECTION */
+
+
+.stats{
+    margin: 10px
+}
+
+.bar-wrapper{
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.barOverflow{ /* Wraps the rotating .bar */
+    margin: 10px;
+    position: relative;
+    width: 250px; height: 140px; /* Half circle (overflow) */
+    margin-bottom: -14px; /* bring the numbers up */
+    overflow: hidden;
+}
+
+.bar{
+    width: 250px; height: 250px; /* full circle! */
+    border-radius: 50%;
+    box-sizing: border-box;
+    border: 15px solid transparent; 
+    background: linear-gradient(white, white) padding-box,
+              linear-gradient(1deg, #123456 12.5%, #2494b6 50%, #bbb 50%) border-box;
+}
+
+.in-bar{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    position:absolute;
+    bottom: 0;
+}
+
+.current{
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+
+.drink-action{
+    margin-top: 20px;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+
+.drink-action button{
+    padding: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+    font-size: 18px;
+    border: 1px #bbb solid;
+    border-radius: 5px;
+}
+
+/* ----------------------------------------------------------------------- */
+.separator{
+    height: 3px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(
+    90deg,
+    #123456 0%,
+    #123456 21%,
+    #124656 41%,
+    #2494b6 100%
+  );
+  margin: 10px
+}
+
+/* ADD DRINK */
+
+.custom-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider-container label {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.slider-container input[type="range"] {
+    height: 180px;
+    margin-top: 25px;
+    writing-mode: vertical-lr;
+    direction: rtl;
+    vertical-align: middle;
+}
+
+
+.glass-container {
+    position: relative;
+    width: 120px;
+    height: 200px;
+    border: 3px solid #ccc;
+    border-top:none;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-right: 20px;
+}
+
+.liquid {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50%;
+    background-color: #2196F3;
+    opacity: 0.7;
+}
+
+#fillAlcool {
+    background-color: #fff;
+    opacity: 0.5;
+}
+
+#fillAlcool-label {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.drink_form{
+    margin: 10px;
+}
+
+.drink_input{
+    margin-top: 10px;
+    margin-left:5px;
+    display: -webkit-inline-box;
+}
+
+.drink_input input, .drink_input select{
+    border: #616161 solid 1px;
+    border-radius: 2px;
+}
+
+.ts-control {
+    padding: 2px;
+    border: #616161 solid 1px;
+    border-radius: 2px;
+}
+
+.drink_input span{
+    width: 110px;
+    display: inline-block;
+
+}
+
+.width-lock{
+    width: 160px;
+    font-size: 14px;
+}
+
+.sh_wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
+.sh{
+    font-size: 18px;
+    background-color: #fff;
+    border: 1px #bbb solid;
+    border-radius: 2px;
+    flex-grow: 1;
+    margin: 4px;
+    min-width: fit-content;
+}
+
+.pushed{
+    background:#123456;
+    color:#fff
+}
+
+.add_drink_submit{
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.add_drink_submit button{
+    font-size: 18px;
+    border: 1px #bbb solid;
+    background:#123456;
+    color:#fff;
+    padding: 3px;
+    padding-left: 40px;
+    padding-right: 40px;
+    border-radius: 3px;
+}
+
+
+/* MANAGE DRINK */
+
+.drink_wrapper{
+    display: flex;
+    margin: 5px;
+    margin-bottom: 10px;
+    border: #616161 solid 1px;
+    border-radius: 2px;
+    padding: 5px;
+}
+
+.drink_wrapper span{
+    margin: auto;
+    margin-left: 5px;
+}
+
+.drink_wrapper button{
+    margin-top: 0px;
+    margin: auto;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: #bbb solid 1px;
+    border-radius: 3px;
+    float: right;
+    margin-right: 5px;
+}
+
+.updateForm{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+@media (max-width: 479px) {
+    .updateForm {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    
+}
+
+
+.updateForm.active {
+    display: flex;
+}
+
+.modal {
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+@media (max-width: 479px) {
+    .modal {
+        background: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+        width: 100%;
+        max-width: 600px;
+        position: relative;
+    }
+    
+}
+
+.updateFormName {
+    padding: 5px;
+    text-align: right;
+    background-color: #123456;
+    color: #fff;
+}
+
+.updateFormName h3{
+    margin: 0;
+    margin-top: 7px;
+    margin-left: 5px;
+    float: left;
+}
+
+.updateFormName button{
+    color: #fff;
+    border: none;
+    background: transparent;
+    font-size: 26px;
+    margin: 0px;
+}
+
+
+.update_drink_submit{
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.update_drink_submit .edit{
+    font-size: 16px;
+    border: 1px #bbb solid;
+    background:#123456;
+    color:#fff;
+    padding: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin:auto;
+    border-radius: 3px;
+}
+
+.update_drink_submit .delete{
+    font-size: 16px;
+    border: 1px #bbb solid;
+    background:rgb(247, 79, 79);
+    color:#fff;
+    padding: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin:auto;
+    border-radius: 3px;
+}

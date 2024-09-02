@@ -1,105 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enchanted Text Effect</title>
+    <title>Verre Rempli avec Deux Barres Verticales</title>
     <style>
-        @keyframes enchantment {
-    0% {
-        color: #ff00ff;
-        text-shadow: 
-            0 0 10px #ff00ff, 
-            0 0 20px #ff00ff, 
-            0 0 30px #ff00ff, 
-            0 0 40px #ff00ff, 
-            0 0 50px #ff00ff, 
-            0 0 60px #ff00ff;
-        transform: translateY(0) skewX(0deg);
-    }
-    25% {
-        color: #00ffff;
-        text-shadow: 
-            0 0 10px #00ffff, 
-            0 0 20px #00ffff, 
-            0 0 30px #00ffff, 
-            0 0 40px #00ffff, 
-            0 0 50px #00ffff, 
-            0 0 60px #00ffff;
-        transform: translateY(-5px) skewX(10deg);
-    }
-    50% {
-        color: #ff00ff;
-        text-shadow: 
-            0 0 10px #ff00ff, 
-            0 0 20px #ff00ff, 
-            0 0 30px #ff00ff, 
-            0 0 40px #ff00ff, 
-            0 0 50px #ff00ff, 
-            0 0 60px #ff00ff;
-        transform: translateY(0) skewX(0deg);
-    }
-    75% {
-        color: #00ffff;
-        text-shadow: 
-            0 0 10px #00ffff, 
-            0 0 20px #00ffff, 
-            0 0 30px #00ffff, 
-            0 0 40px #00ffff, 
-            0 0 50px #00ffff, 
-            0 0 60px #00ffff;
-        transform: translateY(5px) skewX(-10deg);
-    }
-    100% {
-        color: #ff00ff;
-        text-shadow: 
-            0 0 10px #ff00ff, 
-            0 0 20px #ff00ff, 
-            0 0 30px #ff00ff, 
-            0 0 40px #ff00ff, 
-            0 0 50px #ff00ff, 
-            0 0 60px #ff00ff;
-        transform: translateY(0) skewX(0deg);
-    }
-}
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #1a1a1a;
-            font-family: 'Minecraft', sans-serif;
-        }
-
         .container {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .enchanted-text {
-            font-size: 48px;
-            color: #ffffff;
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .slider-container label {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .slider-container input[type="range"] {
+            width: 150px;
+            height: 8px;
+            transform: rotate(-90deg);
+            margin-bottom: 20px;
+        }
+
+
+        .glass-container {
             position: relative;
-            display: inline-block;
+            width: 120px;
+            height: 250px;
+            border: 3px solid #ccc;
+            border-top:none;
+            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            animation: enchantment 3s infinite;
+        }
+
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50%;
+            background-color: #4CAF50;
+            opacity: 0.7;
+        }
+
+        #liquid2 {
+            background-color: #2196F3;
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
-    <!-- <div class="container">
-        <div class="enchanted-text">Minecraft Enchantment</div>
-    </div> -->
+    <div class="container">
+        <div class="slider-container">
+            <label for="fill-level1">Remplissage 1 (%)</label>
+            <input type="range" id="fill-level1" min="0" max="100" value="50" oninput="updateFillLevel('liquid1', this.value)">
+        </div>
 
-    @include('holdable.run.user')
-    @include('holdable.run.increment')
-    @include('holdable.run.increment')
-    @include('holdable.run.increment')
-    @include('holdable.run.increment')
-    @include('holdable.run.increment')
-    @include('holdable.run.user')
+        <div class="glass-container">
+            <div class="liquid" id="liquid1"></div>
+            <div class="liquid" id="liquid2"></div>
+        </div>
 
+        <div class="slider-container">
+            <label for="fill-level2">Remplissage 2 (%)</label>
+            <input type="range" id="fill-level2" min="0" max="100" value="25" oninput="updateFillLevel('liquid2', this.value)">
+        </div>
+    </div>
+
+    <script>
+        function updateFillLevel(liquidId, value) {
+            const liquid = document.getElementById(liquidId);
+            liquid.style.height = value + '%';
+        }
+    </script>
 </body>
 </html>

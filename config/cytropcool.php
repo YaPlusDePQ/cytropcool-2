@@ -24,7 +24,10 @@ return [
         'time_to_max_eat' => 50*60,
         'time_to_max_no_eat' => 25*60,
         'time_to_max_bottoms_up' => 5*60,
-        'time_to_max_no_bottoms_up' => 10*60
+        'time_to_max_no_bottoms_up' => 10*60,
+        'crampte_alcool' => 3,
+        'crampte_gmax' => 2.8,
+        'crampte_mass' => 1
     ]
 
 ];

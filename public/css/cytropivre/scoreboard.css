@@ -1,0 +1,43 @@
+html{
+    background-color: #202020;
+}
+
+.wrapper{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.wrapper span{
+    margin:auto;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.low{
+    color:#2dd63e;
+}
+
+.medium{
+    color:#d6d02d;
+}
+
+.high{
+    color:#d66e2d;
+}
+
+.very-high{
+    color:#d62d2d;
+}
+
+.time{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    margin-top: 20px;
+}

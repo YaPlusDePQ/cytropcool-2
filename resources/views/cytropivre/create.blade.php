@@ -31,7 +31,7 @@
                 </div>
 
                 <span>Nom:</span>
-                <input type="text" name="name" value='{{old("email")}}' required>
+                <input type="text" name="name" value='{{old("name")}}' required>
 
                 <div class="checkbox">
                     <span>Session privée</span>

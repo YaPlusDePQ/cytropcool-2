@@ -1,0 +1,77 @@
+.content{
+    margin: 10px;
+}
+
+button{
+    border: 1px #000 solid;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 2px;
+}
+
+input{
+    border: 1px #000 solid;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 2px;
+}
+
+
+.failed-msg{
+    margin-bottom: 5px;
+    margin-top: 5px;
+    color:red;
+}
+
+.success-msg{
+    margin-bottom: 5px;
+    margin-top: 5px;
+    color:green;
+}
+
+.code{
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.separator{
+    height: 3px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(
+    90deg,
+    #123456 0%,
+    #123456 21%,
+    #124656 41%,
+    #2494b6 100%
+  );
+}
+
+.session-select{
+    margin-top: 20px;
+}
+
+#session-viewer{
+    margin-top: 10px;
+    min-height: 600px;
+    padding: 5px;
+    padding-top: 10px;
+}
+
+#session-viewer div{
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.session-wrapper{
+    background-color: #123456;
+    color: white;
+    border: 1px #000 solid;
+    border-radius: 2px;
+    text-align: right;
+}
+
+.session-wrapper span{
+    float: left;
+    font-weight: bold;
+}

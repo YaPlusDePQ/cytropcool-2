@@ -20,9 +20,9 @@
         </ul>
         <li {{ Auth::check() ? '' : 'hidden' }} ><button onclick="hideshow('cytropivre', false)">CYTROPIVRE</button></li>
         <ul class="nav-sub" id="cytropivre" hidden>
-            <li {{ Auth::check() && CytropivreController::getSession(Auth::user()->id) == null ? 'hidden' : '' }} ><a href="{{url('/')}}">SESSION</a></li>
-            <li {{ Auth::check() && CytropivreController::getSession(Auth::user()->id) == null ? 'hidden' : '' }} ><a href="{{url('/')}}">SCOREBOARD</a></li>
-            <li {{ Auth::check() && CytropivreController::getSession(Auth::user()->id) != null ? 'hidden' : '' }} ><a href="{{url('/')}}">REJOINDRE UNE SESSION</a></li>
+            <li {{ Auth::check() && CytropivreController::getSession(Auth::user()->id) == null ? 'hidden' : '' }} ><a href="{{url('/cytropivre/session')}}">SESSION</a></li>
+            <li {{ Auth::check() && CytropivreController::getSession(Auth::user()->id) == null ? 'hidden' : '' }} ><a href="{{url('/cytropivre/scoreboard')}}">SCOREBOARD</a></li>
+            <li {{ Auth::check() && CytropivreController::getSession(Auth::user()->id) != null ? 'hidden' : '' }} ><a href="{{url('/cytropivre/search')}}">REJOINDRE UNE SESSION</a></li>
             <li {{ Auth::check() && CytropivreController::getSession(Auth::user()->id) != null ? 'hidden' : '' }} ><a href="{{url('/cytropivre/create')}}">CRÉER UNE SESSION</a></li>
         </ul>
         <li {{ Auth::check() ? '' : 'hidden' }} ><a href="./">SHOP</a></li>

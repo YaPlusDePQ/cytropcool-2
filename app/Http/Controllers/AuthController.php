@@ -94,8 +94,6 @@ class AuthController extends Controller
             ;", 
             [$request->email])[0]->id;
 
-            HoldableController::addHoldable($id, [1,2,3,4]);
-
             return Redirect::back()->with(['success' => 'Inscription réussi, tu peux te connecter.']);
         }
     }
