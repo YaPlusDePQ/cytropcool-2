@@ -41,7 +41,7 @@ class resetPSW extends Mailable
         return new Content(
             view: 'auth.mail',
             with: [
-                'link' => url('/reset-password/').$this->token
+                'link' => url('/reset-password/').'/'.$this->token
             ]
         );
     }
