@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Hash;
 use Illuminate\Support\Str;
+use App\Mail\resetPSW;
+use Illuminate\Support\Facades\Mail;
 
 use App\Http\Controllers\HoldableController;
 
@@ -132,12 +134,8 @@ class AuthController extends Controller
         
         $token = $tokenData->token;
         $email = $tokenData->email;
-
         
-        /**
-         * TODO: send email
-         */
-
+        Mail::to($email)->send(new resetPSW($token));
 
         return Redirect::back()->with(['success' => 'Un mail avec un lien de réinitialisation a été envoyé.']);
     }
