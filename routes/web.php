@@ -263,5 +263,5 @@ Route::get('/debug/data-view', function () {
 })->middleware([StdAuth::class]);
 
 Route::get('/debug/test', function () {
-    return view('debug.test', HoldableController::getShop([Auth::user()->id], ['pseudo']));
+    return view('debug.test');
 });

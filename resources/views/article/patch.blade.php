@@ -21,7 +21,7 @@
                 <b>Pour ce premier jour de WEI, comme l'année dernière, la grande mise à jour CYtropcool est arrivée avec son lot de surprises...</b>
             </p>
             <p>
-                Premièrement, une refonte visuelle et technique du site a été réalisée avec pour objectif de rendre CYtropcool bien plus polyvalent et ergonomique pour l'avenir. <b>Les mots de passe ont d'ailleurs tous été réinitialisés, et un lien devrait être disponible dans votre boîte mail.</b>
+                Premièrement, une refonte visuelle et technique du site a été réalisée avec pour objectif de rendre CYtropcool bien plus polyvalent et ergonomique pour l'avenir. <b>Les mots de passe ont d'ailleurs tous été réinitialisés, pour le changer, <a href="{{url('forgot-password')}}">allez ici (vérifiez les spams).</a></b>
             </p>
             <p>
                 Pour cette seconde saison de CYtropIvre, <b>toutes les statistiques ont été réinitialisées à 0</b> (un récapitulatif des statistiques de l'année précédente arrivera prochainement, elles n'ont pas disparu ;) ). <b>Les récompenses pour les top 1, 2 et 3 ont été distribuées</b>, respectivement :
