@@ -1,6 +1,6 @@
 @if($_INVENTORY_RUN->toDisplay->data)
 <div>
-    <span class="{{$_INVENTORY_RUN->customClass}}">{{ $_HOLD_RUN->currentUser->username[0] }}...</span>
+    <span class="{{$_INVENTORY_RUN->customClass}}">{{ $_INVENTORY_RUN->username[0] }}...</span>
 </div>
 <div class="_after_inventory_{{$_INVENTORY_RUN->toDisplay->id}}">
     <{{$_INVENTORY_RUN->toDisplay->tag}}>

@@ -273,6 +273,8 @@ class CytropivreController extends Controller
         }
 
         $DECAY = config('cytropcool.constant.decay');
+
+        $TIME_BEFORE_DECAY = config('cytropcool.constant.time_before_decay');
         
         $TIME_TO_MAX = $eat ? config('cytropcool.constant.time_to_max_eat') : config('cytropcool.constant.time_to_max_no_eat');
         
@@ -342,7 +344,7 @@ class CytropivreController extends Controller
             $insynch_max_rate_last_time = $insynch_max_rate_current_time;
         }
         
-        $reduction = $DECAY * ($current_date - ($TIME_FIRST_DRINK + 30*60 + ( $drinks[$i]->bottoms_up ? $TIME_TO_MAX_BOTTOMS_UP : $TIME_TO_MAX_NO_BOTTOMS_UP )));
+        $reduction = $DECAY * ($current_date - ($TIME_FIRST_DRINK + $TIME_BEFORE_DECAY + ( $drinks[$i]->bottoms_up ? $TIME_TO_MAX_BOTTOMS_UP : $TIME_TO_MAX_NO_BOTTOMS_UP )));
         if($reduction > 0) $rate -= $reduction;
         if($rate < 0) $rate = 0;
         

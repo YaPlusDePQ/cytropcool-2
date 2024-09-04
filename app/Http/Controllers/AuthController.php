@@ -38,7 +38,7 @@ class AuthController extends Controller
                 if($request->redirect) return redirect($request->redirect);
                 else return redirect('/profile');
             }
-            return Redirect::back()->withErrors('L\'email ou le mot de passe est incorrect.')->withInput();
+            return Redirect::back()->withErrors('L\'e-mail ou le mot de passe est incorrect.')->withInput();
         }
     }
 
@@ -58,7 +58,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(), [
             'email' => 'bail|required|email',
-            'name' => 'bail|required|min:1',
+            'name' => 'bail|required|min:1|max:25',
             'password' => 'bail|required|confirmed|min:1',
             'weight' => 'bail|required|int|min:20',
             'sexe' => ['bail','required',str_replace('.', '\.', 'regex:/'.config('cytropcool.constant.female').'|'.config('cytropcool.constant.male').'/')]
@@ -73,7 +73,7 @@ class AuthController extends Controller
             
             $existingUser = DB::select("SELECT email FROM $userTable WHERE email = ? LIMIT 1;", [$request->email]);
             if( $existingUser){
-                return Redirect::back()->withErrors('L\'email est déjà utilisé.')->withInput();
+                return Redirect::back()->withErrors('L\'e-mail est déjà utilisé.')->withInput();
             }
 
             DB::insert("INSERT INTO 
@@ -84,7 +84,7 @@ class AuthController extends Controller
             ;", 
             [$request->email, Hash::make($request->password), $request->name, $request->weight, $request->sexe]);
 
-            $id = DB::select("SELECT 
+            $result = DB::select("SELECT 
                 id
             FROM 
                 $userTable 
@@ -92,9 +92,13 @@ class AuthController extends Controller
                 email=?
             LIMIT 1
             ;", 
-            [$request->email])[0]->id;
+            [$request->email]);
 
-            return Redirect::back()->with(['success' => 'Inscription réussi, tu peux te connecter.']);
+            if(count($result) == 0){
+                return Redirect::back()->withErrors('Oops, une erreur est survenue.')->withInput();
+            }
+
+            return Redirect::back()->with(['success' => 'Inscription réussie, tu peux te connecter.']);
         }
     }
 
@@ -112,15 +116,15 @@ class AuthController extends Controller
 
         $existingUser = DB::select("SELECT email FROM $userTable WHERE email = ? LIMIT 1;", [$request->email]);
         if(!$existingUser){
-            return Redirect::back()->withErrors('L\'email ne correspond à aucun compte.')->withInput();
+            return Redirect::back()->withErrors('L\'e-mail ne correspond à aucun compte.')->withInput();
         }
 
         DB::insert("INSERT INTO $forgotPasswordTokenTable (email, token, created_at) values (?,?,?);", [$request->email, Str::random(60), date("Y-m-d H:i:s")]);
     
         $tokenData  = DB::select("SELECT email, token FROM $forgotPasswordTokenTable WHERE email = ? LIMIT 1", [$request->email]);
 
-        if($tokenData == []){
-            return Redirect::back()->with(['Une erreur inattendu est arrivée, réessayez plus tard.']);
+        if(count($tokenData) == 0){
+            return Redirect::back()->withErrors(['Oops, une erreur est survenue.']);
         }
         else{
             $tokenData = $tokenData[0];
@@ -135,7 +139,7 @@ class AuthController extends Controller
          */
 
 
-        return Redirect::back()->with(['success' => 'Un mail avec un lien de réinitalisation a été envoyé.']);
+        return Redirect::back()->with(['success' => 'Un mail avec un lien de réinitialisation a été envoyé.']);
     }
 
     public static function StdResetPassword(Request $request){
@@ -164,13 +168,17 @@ class AuthController extends Controller
         }
 
         if(new \DateTime(date("Y-m-d H:i:s")) > (new \DateTime($user->created_at))->add(new \DateInterval('PT' . config('auth.passwords.users.expire') . 'M'))){
-            return Redirect::back()->withErrors('Le lien utilisé a expriré.');
+            return Redirect::back()->withErrors('Le lien utilisé a expiré.');
         }
         
-        DB::update("UPDATE $userTable SET password = ? WHERE email = ?;", [Hash::make($request->password), $request->email]);
+        $affected = DB::update("UPDATE $userTable SET password = ? WHERE email = ?;", [Hash::make($request->password), $request->email]);
+
+        if($affected == 0){
+            return Redirect::back()->withErrors('Oops, une erreur est survenue.');
+        }
 
         DB::delete("DELETE FROM $forgotPasswordTokenTable WHERE token = ?", [$request->token]);
 
-        return Redirect::back()->with(['success' => 'Le mot de passse a été réinitialisé.']);
+        return Redirect::back()->with(['success' => 'Le mot de passe a été réinitialisé.']);
     }
 }

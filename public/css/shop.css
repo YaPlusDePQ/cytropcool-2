@@ -1,0 +1,253 @@
+.main-title{
+    text-align: right;
+    color: #fff;
+    padding: 10px;
+    background: #124656;
+}
+
+.main-title p {
+    text-align: justify;
+    color: #fff;
+    padding: 5px;
+}
+
+
+.main-title-crampte{
+    font-size: 24px;
+    text-align: left;
+}
+
+.main-title div{
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.shop{
+    padding: 10px;
+}
+
+.separator{
+    height: 3px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(
+    90deg,
+    #123456 0%,
+    #123456 21%,
+    #124656 41%,
+    #2494b6 100%
+    );
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.section-title {
+    text-align: right;
+}
+
+.elements-display .section-title{
+    font-size: 16px;
+    padding-top: 5px;
+}
+
+.displayer ul{
+    display: flex;
+    flex-direction: row;
+    padding: 0px;
+    margin: 5px;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+.displayer_pseudo{
+    white-space:nowrap;
+    font-size: 26px;
+    font-weight: normal;
+    color:#000;
+}
+
+.displayer li{
+    list-style: none;
+    margin-right: 10px;
+    text-align: center;
+    border: 1px solid #fafafa;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+}
+
+.displayer ul{
+    display: grid;
+    grid-gap: 10px;
+    padding: 0px;
+    margin: 5px;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    overflow-x: scroll;
+}
+
+.displayer li:nth-child(3n+1){
+    grid-row-start: 1;
+}
+
+.displayer li:nth-child(3n+2){
+    grid-row-start: 2;
+}
+
+.displayer li:nth-child(3n+3){
+    grid-row-start: 3;
+}
+
+.displayer li{
+    width: 140px;
+    list-style: none;
+}
+
+.displayer-element-content{
+    display: flex;
+    align-items: center;
+    overflow: auto;
+    padding: 5px;
+    border: #e9e9e9 solid 1px;
+    border-radius: 5px;
+    justify-content: center;
+}
+
+.displayer li p{
+    margin-top: 5px;
+}
+
+.displayer li .buy{
+    border: 1px #bbb solid;
+    background:#123456;
+    color:#fff;
+    padding: 3px;
+    margin-top: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 3px;
+}
+
+
+
+
+
+.buy-form{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+@media (max-width: 479px) {
+    .buy-form {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    
+}
+
+
+.buy-form.active {
+    display: flex;
+}
+
+.modal {
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+    border-radius: 3px;
+}
+
+@media (max-width: 479px) {
+    .modal {
+        background: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+        width: 90%;
+        max-width: 600px;
+        position: relative;
+    }
+    
+}
+
+.modal .displayer-element-content{
+    margin:10px;
+}
+
+.buy-form-title {
+    padding: 5px;
+    background-color: #123456;
+    color: #fff;
+    padding: 10px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.buy-form button{
+    color: #fff;
+    border: none;
+    background: transparent;
+    font-size: 26px;
+    margin: 0px;
+}
+
+
+.buy-form-submit{
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.buy-form-submit .buy{
+    font-size: 16px;
+    border: 1px #bbb solid;
+    background:#123456;
+    color:#fff;
+    padding: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin:auto;
+    border-radius: 3px;
+}
+
+.buy-form-submit .cancel{
+    font-size: 16px;
+    border: 1px #bbb solid;
+    background:rgb(247, 79, 79);
+    color:#fff;
+    padding: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin:auto;
+    border-radius: 3px;
+}
+
+.failed{
+    padding-top: 10px;
+    color:red;
+    text-align: left;
+}
+
+.success{
+    margin-top: 10px;
+    color:rgb(35, 212, 0);
+    text-align: left;
+}

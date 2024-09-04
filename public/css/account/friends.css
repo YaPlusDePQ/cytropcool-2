@@ -1,0 +1,112 @@
+.section-title{
+    text-align: right;
+    color: #fff;
+    padding: 10px;
+    background: #124656;
+}
+
+.section-title p {
+    text-align: justify;
+    color: #fff;
+    padding: 5px;
+}
+
+.section-requests{
+    padding: 10px;
+}
+
+.request{
+    margin:5px;
+    font-size: 18px;
+}
+
+.request button{
+    border: 1px solid #c2c2c2;
+    border-radius: 5px;
+    color:#fff;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.accept {
+    background-color: #2dd63e;
+}   
+
+.cancel {
+    background-color: #d62d2d;
+}
+
+.separator{
+    height: 3px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(
+    90deg,
+    #123456 0%,
+    #123456 21%,
+    #124656 41%,
+    #2494b6 100%
+    );
+    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.section-friends{
+    padding: 10px;
+}
+
+.friend{
+    position: relative;
+    display: flex;
+    font-size: 20px;
+    margin: 5px;
+    width: 100%;
+}
+
+.more img{
+    height: 18px;
+}
+
+.more{
+    height: fit-content;
+    border: none;
+    float: right;
+    margin-left: auto;
+}
+
+.friend ul{
+    background-color: #fff;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #bbb;
+    width: 125px;
+    z-index: 98;
+    list-style-type: none;
+    padding: 0px;
+}
+
+.friend ul li{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 3px;
+}
+
+.friend ul button{
+    border: none;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.delete{
+    color:#d62d2d;
+}
+
+[hidden] {
+    display: none;
+}

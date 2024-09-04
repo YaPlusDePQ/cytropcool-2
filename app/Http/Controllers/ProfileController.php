@@ -170,7 +170,7 @@ class ProfileController extends Controller
 
     public static function updateUser(Request $request){
         $validator = Validator::make($request->all(), [
-            'name' => 'bail|required|min:1',
+            'name' => 'bail|required|min:1|max:25',
             'weight' => 'bail|required|int|min:20',
             'sexe' => ['bail','required',str_replace('.', '\.', 'regex:/'.config('cytropcool.constant.female').'|'.config('cytropcool.constant.male').'/')]
         ]);
@@ -178,20 +178,24 @@ class ProfileController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->with(["update-failed" => $validator->errors()->first()])->withInput();
         }
-        else{
-            $userTable = config('auth.providers.users.table');
 
-            DB::update("UPDATE 
-                $userTable 
-            SET
-                name=?,weight=?,sexe=?
-            WHERE
-                id=?
-            ;", 
-            [$request->name, $request->weight, $request->sexe, Auth::user()->id]);
+        $userTable = config('auth.providers.users.table');
 
-            return Redirect::back()->with(["update-success" => "Tes données sont à jour."])->withInput();
+        $affected = DB::update("UPDATE 
+            $userTable 
+        SET
+            name=?,weight=?,sexe=?
+        WHERE
+            id=?
+        ;", 
+        [$request->name, $request->weight, $request->sexe, Auth::user()->id]);
+
+        if($affected == 0){
+            return Redirect::back()->with(["update-failed" => 'Oops, une erreur est survenue.']);
         }
+
+        return Redirect::back()->with(["update-success" => "Tes données sont à jour."]);
+        
     }
 
     public static function updateHold(Request $request){
@@ -207,7 +211,10 @@ class ProfileController extends Controller
             return Redirect::back()->with(["hold-failed" => $validator->errors()->first()]);
         }
         else{
-            HoldableController::setHoldable(Auth::user()->id, $request->saveHolds);
+            $affected = HoldableController::setHoldable(Auth::user()->id, $request->saveHolds);
+            if($affected = 0){
+                return Redirect::back()->with(["hold-failed" =>'Oops, une erreur est survenue.']);
+            }
             return Redirect::back()->with(["hold-success" => "Ton style a été mit à jour !"]);
         }
 

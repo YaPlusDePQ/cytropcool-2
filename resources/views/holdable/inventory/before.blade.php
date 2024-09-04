@@ -1,6 +1,6 @@
 @if($_INVENTORY_RUN->toDisplay->data)
 <div class="_before_inventory_{{$_INVENTORY_RUN->toDisplay->id}}">
-    <{{$_INVENTORY_RUN->toDisplay->tag}}>
+    <{{$_INVENTORY_RUN->toDisplay->tag}} >
 
     @if($_INVENTORY_RUN->toDisplay->tag == 'style')
     ._before_inventory_{{$_INVENTORY_RUN->toDisplay->id}}{
@@ -15,7 +15,7 @@
     </{{$_INVENTORY_RUN->toDisplay->tag}}>
 </div>
 <div>
-    <span class="{{$_INVENTORY_RUN->customClass}}">{{ $_HOLD_RUN->currentUser->username[0] }}...</span>
+    <span class="{{$_INVENTORY_RUN->customClass}}">{{ $_INVENTORY_RUN->username[0] }}...</span>
 </div>
 @else
 <div>

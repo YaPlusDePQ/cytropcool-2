@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('/css/account/self.css')}}" rel='stylesheet'>
     <script src="{{ asset('/js/account/self.js')}}" rel='stylesheet'></script>
-    <script>window.currentHold = {} </script>
     <title>CYtropcool - Profil</title>
 </head>
 <body>

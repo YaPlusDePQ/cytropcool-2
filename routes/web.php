@@ -10,11 +10,26 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HoldableController;
 use App\Http\Controllers\CytropivreController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\FriendController;
 
+/**
+ * ########################################################################
+ *           HOME
+ * ########################################################################
+ */
 
+ Route::get('/', function () {
+    return view('home', ['articles'=>HomeController::getArticles()]);
+});
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/article/{title}', function ($smug) {
+    $article = HomeController::getArticle($smug);
+    if($article == null){
+        abort(404);
+    }
+    return view('article.'.$article->view, ['article'=>$article]);
 });
 
 /**
@@ -91,7 +106,11 @@ Route::post('/holdable/preview', function (Request $request) {
 
 Route::get('/profile/{userID}', function (String $userID) {
     $user = ProfileController::getUser($userID);
-    $inventory = HoldableController::getInventory(Auth::user()->id, false);
+    if($user == null){
+        return view('account.unknow');
+    }
+
+    $inventory = HoldableController::getInventory($user->id, false);
     $cost = 0;
     foreach($inventory as $cat => $holds){
         foreach($holds as $h){
@@ -99,24 +118,45 @@ Route::get('/profile/{userID}', function (String $userID) {
         }
     }
 
-    if($user != null){
-        return view('account.public', [
-            'user' => $user,
-            'inventory' => $inventory,
-            'stats' => ProfileController::getStats(Auth::user()->id),
-            'ranks' => ProfileController::getRanks(Auth::user()->id),
-            'inventoryCost' => $cost
-        ]
-        +HoldableController::displayHold([$userID], ['public_pseudo'])
-        +HoldableController::displayInventory($userID, ['public_displayer_pseudo'])
+
+    return view('account.public', [
+        'user' => $user,
+        'inventory' => $inventory,
+        'stats' => ProfileController::getStats(Auth::user()->id),
+        'ranks' => ProfileController::getRanks(Auth::user()->id),
+        'inventoryCost' => $cost
+    ]
+    +HoldableController::displayHold([$userID], ['public_pseudo'])
+    +HoldableController::displayInventory($userID, ['public_displayer_pseudo'])
     );
-    }
-    else{
-        return view('account.unknow');
-    }
 });
 
+Route::post('/profile/{userID}', function ($userID) {
+    return FriendController::sendRequest($userID);
+ })->middleware([StdAuth::class]);
+ 
 
+Route::get('/friends', function () {
+    $ids = FriendController::getFriends();
+    $friendsSession = [];
+    foreach($ids as $id){
+        $friendsSession[ $id] = CytropivreController::getSession($id);
+    }
+    return view('account.friends', [
+        'friends' => $ids,
+        'sessions' => $friendsSession,
+        'requests' => FriendController::getRequest()
+    ]
+    +HoldableController::displayHold($ids));
+})->middleware([StdAuth::class]);
+
+Route::put('/friends', function (Request $request) {
+   return FriendController::acceptRequest($request);
+})->middleware([StdAuth::class]);
+
+Route::delete('/friends', function (Request $request) {
+    return FriendController::deleteFriend($request);
+ })->middleware([StdAuth::class]);
 
 /**
  * ########################################################################
@@ -198,14 +238,30 @@ Route::get('/cytropivre/scoreboard/update', function(){
 
 /**
  * ########################################################################
+ *           SHOP
+ * ########################################################################
+ */
+
+ Route::get('/shop', function(){
+    return view('shop', [
+        'shop'=>ShopController::getShop()
+    ]+HoldableController::displayInventory(Auth::user()->id, ['displayer_pseudo']));
+})->middleware([StdAuth::class]);
+
+Route::post('/shop', function(Request $request){
+    return ShopController::buyHold($request);
+})->middleware([StdAuth::class]);
+
+/**
+ * ########################################################################
  *           DEBUG
  * ########################################################################
  */
 
 Route::get('/debug/data-view', function () {
-    return view('debug.data-view',['data'=>CytropivreController::getDrink()]);
+    return view('debug.data-view',['data'=>FriendController::getRequest()]);
 })->middleware([StdAuth::class]);
 
 Route::get('/debug/test', function () {
-    return view('debug.test', HoldableController::displayHold([Auth::user()->id], ['pseudo']));
+    return view('debug.test', HoldableController::getShop([Auth::user()->id], ['pseudo']));
 });

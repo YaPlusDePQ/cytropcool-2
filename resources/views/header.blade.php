@@ -16,7 +16,7 @@
         <li {{ Auth::check() ? '' : 'hidden' }} ><button onclick="hideshow('account', false)">COMPTE</button></li>
         <ul class="nav-sub" id="account" hidden>
             <li><a href="{{url('/profile')}}">PROFIL</a></li>
-            <li><a href="{{url('/')}}">AMIS</a></li>
+            <li><a href="{{url('/friends')}}">AMIS</a></li>
         </ul>
         <li {{ Auth::check() ? '' : 'hidden' }} ><button onclick="hideshow('cytropivre', false)">CYTROPIVRE</button></li>
         <ul class="nav-sub" id="cytropivre" hidden>
@@ -25,10 +25,10 @@
             <li {{ Auth::check() && CytropivreController::getSession(Auth::user()->id) != null ? 'hidden' : '' }} ><a href="{{url('/cytropivre/search')}}">REJOINDRE UNE SESSION</a></li>
             <li {{ Auth::check() && CytropivreController::getSession(Auth::user()->id) != null ? 'hidden' : '' }} ><a href="{{url('/cytropivre/create')}}">CRÉER UNE SESSION</a></li>
         </ul>
-        <li {{ Auth::check() ? '' : 'hidden' }} ><a href="./">SHOP</a></li>
+        <li {{ Auth::check() ? '' : 'hidden' }} ><a href="{{url('/shop')}}">SHOP</a></li>
         <li><button onclick="hideshow('cytropfun', false)">CYTROPFUN</button></li>
         <ul class="nav-sub" id="cytropfun" hidden>
-            <li><a href="./">OUIOUNON.NET</a></li>
+            <li><a href="{{url('/')}}">OUIOUNON.NET</a></li>
         </ul>
         <li {{ Auth::check() ? '' : 'hidden' }} ><a href="{{url('/logout')}}">DECONNEXION</a></li>
     </ul>

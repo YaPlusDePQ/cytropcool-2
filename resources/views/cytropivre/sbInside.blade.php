@@ -1,6 +1,6 @@
 @if(isset($_CYTI_GL) && count($_CYTI_GL) > 0)
     @foreach($_CYTI_GL as $gl)
-        <div class="wrapper">
+        <div class="wrapper" onclick="window.location = '{{url('/profile/'.$_HOLD_RUN->currentUser->id)}}'">
             @include('holdable.run.user')
             <span class="{{$gl < 1 ? 'low' : ($gl < 2 ? 'medium' :($gl < 3 ? 'high' : 'very-high'))}}">{{$gl}} g/L</span>
         </div>

@@ -1,0 +1,17 @@
+.article-wrapper{
+    padding:10px;
+}
+
+.article-title{
+    margin-bottom: 10px;
+}
+
+.article-content p{
+    text-align: justify;
+    margin-bottom: 5px;
+}
+
+.article-leave{
+    text-align: center;
+    font-size: larger;
+}

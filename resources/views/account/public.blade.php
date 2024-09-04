@@ -17,12 +17,33 @@
                 
                 <div class="section-title">
                     <h1>PROFIL</h1>
+
+                    <form id="accept" method="POST">
+                        @csrf <!-- {{ csrf_field() }} -->
+                        <input type="number" name="to" value='{{$user->id}}' readonly required hidden>
+                        <button style="border:1px solid #2494b6; border-radius:3px;padding:3px;padding-left:5px;padding-right:5px;margin-top:5px">Ajouter en ami</button>
+                    </form>
                 </div>
 
                 <div class="info-data">
+                    
+                    <div  class="failed-msg" @if(!$errors->any()) {{'hidden'}} @endif>
+                        @if ($errors->any())
+                            @foreach ($errors->all() as $error)
+                                {{ $error }}
+                            @endforeach
+                        @endif
+                    </div>
+                    <div class="success-msg" @if(!Session::has('success')) {{'hidden'}} @endif>
+                        @if (Session::has('success'))
+                        {{ Session::get('success') }}
+                        @endif
+                    </div>
+
                     <div style="display: flex;align-items: center;margin-top: 5px;">
                         @include('holdable.run.user')
                     </div>
+
                     <span  class="title"> Cramptés </span>
 
                     <h2>{{$user->crampte;}}</h2>

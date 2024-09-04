@@ -111,8 +111,9 @@ CREATE TABLE inventory(
 
 CREATE TABLE article(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    link VARCHAR(200) NOT NULL,
+    smug VARCHAR(100) NOT NULL UNIQUE,
     title VARCHAR(100) NOT NULL,
+    view VARCHAR(200) NOT NULL,
     description TEXT NOT NULL
 );
 
@@ -124,9 +125,9 @@ CREATE TABLE gift(
 );
 
 CREATE TABLE friends(
-    user_id1 INT NOT NULL,
-    user_id2 INT NOT NULL,
-    accepted TINYINT NOT NULL DEFAULT 0,
+    from INT NOT NULL,
+    to INT NOT NULL,
+    accepted TINYINT(1) NOT NULL DEFAULT 0,
 
     CONSTRAINT pk_inventory PRIMARY KEY (user_id1,user_id2),
 

@@ -57,24 +57,27 @@ class HoldableController extends Controller
         return $filterdHoldable;
     }
 
-    public static function addHoldable($userID, array $style){
+    public static function addHoldable($userID, array $styles){
         $userHoldingTable = config('cytropcool.database.table.user_holding');
         $styleTable = config('cytropcool.database.table.holdable');
-        
+        $added = 0;
         foreach($styles as $style){
             try{
-                DB::update("INSERT INTO
+                DB::insert("INSERT INTO
                     $userHoldingTable
                     (user_id , item_id, bought_at) 
                 VALUES 
-                    (?,?,?,0)
+                    (?,?,?)
                 ;", [$userID, $style->id, $style->price]);
+                $added += 1;
             }
             catch(Exception $e){
                 continue;
             }
             
         }
+
+        return $added;
     }
 
     public static function setHoldable($userID, array $holdableIds){
@@ -88,7 +91,7 @@ class HoldableController extends Controller
 
         $ids = implode(',', $filteredIds);
 
-        DB::update("UPDATE 
+        $affected = DB::update("UPDATE 
             $userHoldingTable 
         SET
             hold=(item_id IN ($ids))
@@ -96,6 +99,8 @@ class HoldableController extends Controller
             user_id=?
         ;", 
         [$userID]);
+
+        return $affected;
     }
     
     public static function getCurrentHold($userID, array $holdableIds = []){
@@ -147,6 +152,7 @@ class HoldableController extends Controller
 
         $category = [];
         foreach( $userHoldings as $item ){
+            $item->data = str_replace('&asset&', asset('/'), $item->data);
             if( $item->category == null || $item->position == null || $item->tag == null){
                 continue;
             }
@@ -195,7 +201,12 @@ class HoldableController extends Controller
             array_push($runVariable->user, self::getCurrentHold($id));
         }
 
-        $runVariable->currentUser = $runVariable->user[$runVariable->cui];
+        if(count($runVariable->user) > 0){
+            $runVariable->currentUser = $runVariable->user[$runVariable->cui];
+        }
+        else{
+            $runVariable->currentUser = null;
+        }
         
         return ["_HOLD_RUN" => $runVariable];
     }
@@ -210,6 +221,7 @@ class HoldableController extends Controller
         array_push($runVariable->user, self::getCurrentHold($userID, $holdableIds));
 
         $runVariable->currentUser = $runVariable->user[$runVariable->cui];
+
 
         return ["_HOLD_RUN" => $runVariable];
     }
@@ -238,6 +250,7 @@ class HoldableController extends Controller
         $inventory = new stdClass();
         
         foreach($styles as $style){
+            $style->data = str_replace('&asset&', asset('/'), $style->data);
             $cat = $style->category;
             
             if(!isset($inventory->$cat)){

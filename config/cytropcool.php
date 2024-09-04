@@ -2,7 +2,7 @@
 return [
     'database' => [
         'table' => [
-            'main_page_article' => 'article',
+            'article' => 'article',
             'drinks' => 'drink',
             'user_holding' => 'inventory',
             'holdable' => 'holdable',
@@ -11,6 +11,7 @@ return [
             'sessions' => 'session',
             'user_session' => 'user_session',
             'user_statistiques' => 'statistiques',
+            'user_friends' => 'friends',
 
             'user' => 'user',
             'password_reset' => 'password_reset_tokens'
