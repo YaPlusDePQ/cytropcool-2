@@ -57,14 +57,3 @@
 
 </body>
 </html>
-
-- Somme de tous tes taux d'alcoolémie
-- Taux d'alcoolémie max en une session
-- Somme de tout l'alcool que tu as bu
-- Quantité max d'alcool bu en une session
-- Somme de la quantité d'alcool pur bu
-- Quantité max d'alcool pur bu en une session
-- Nombre total de verres pris
-- Nombre max de verres bu en une session
-- Nombre total de shots pris
-- Nombre max de shots bu en une session

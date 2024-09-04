@@ -5,7 +5,7 @@ CREATE TABLE user(
     name VARCHAR(100) NOT NULL,
     crampte INT NOT NULL DEFAULT 100,
     weight FLOAT NOT NULL DEFAULT 66.0,
-    sexe FLOAT NOT NULL DEFAULT 0.6,
+    sexe FLOAT NOT NULL DEFAULT 0.6
 );
 
 CREATE TABLE password_reset_tokens(
@@ -113,8 +113,8 @@ CREATE TABLE article(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     smug VARCHAR(100) NOT NULL UNIQUE,
     title VARCHAR(100) NOT NULL,
-    view VARCHAR(200) NOT NULL,
-    description TEXT NOT NULL
+    view VARCHAR(100) NOT NULL,
+    description VARCHAR(200) NOT NULL
 );
 
 CREATE TABLE gift(
@@ -125,12 +125,12 @@ CREATE TABLE gift(
 );
 
 CREATE TABLE friends(
-    from INT NOT NULL,
-    to INT NOT NULL,
+    `from` INT NOT NULL,
+    `to` INT NOT NULL,
     accepted TINYINT(1) NOT NULL DEFAULT 0,
 
-    CONSTRAINT pk_inventory PRIMARY KEY (user_id1,user_id2),
+    CONSTRAINT pk_inventory PRIMARY KEY (`from`,`to`),
 
-    FOREIGN KEY fk_friends_userId1(user_id1) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY fk_friends_itemId2(user_id2) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY fk_friends_userId1(`from`) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY fk_friends_itemId2(`to`) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
