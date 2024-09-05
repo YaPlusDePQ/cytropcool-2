@@ -254,14 +254,24 @@ Route::post('/shop', function(Request $request){
 
 /**
  * ########################################################################
+ *           CYTROPFUN
+ * ########################################################################
+ */
+
+ Route::get('/cytropfun/ouiounon', function(){
+    return view('cytropfun.ouiounon');
+});
+
+/**
+ * ########################################################################
  *           DEBUG
  * ########################################################################
  */
 
-Route::get('/debug/data-view', function () {
-    return view('debug.data-view',['data'=>FriendController::getRequest()]);
-})->middleware([StdAuth::class]);
+// Route::get('/debug/data-view', function () {
+//     return view('debug.data-view',['data'=>FriendController::getRequest()]);
+// })->middleware([StdAuth::class]);
 
-Route::get('/debug/test', function () {
-    return view('debug.test');
-});
+// Route::get('/debug/test', function () {
+//     return view('debug.test');
+// });

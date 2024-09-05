@@ -1,0 +1,36 @@
+body{
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.ask{
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    color: #fff;
+    background-color: #202020;
+}
+
+.ask input{
+    margin: 5px;
+    font-size: 18px;
+}
+
+.ask button{
+    background-color: #fff;
+    border: 1px solid #123456;
+    font-size: 24px;
+}
+
+.result{
+    display: flex;
+    flex-grow: 1;
+    background-color: #202020;
+    color: #fff;
+    font-size: 124px;
+    justify-content: center;
+    align-items: center;
+}

@@ -28,7 +28,7 @@
         <li {{ Auth::check() ? '' : 'hidden' }} ><a href="{{url('/shop')}}">SHOP</a></li>
         <li><button onclick="hideshow('cytropfun', false)">CYTROPFUN</button></li>
         <ul class="nav-sub" id="cytropfun" hidden>
-            <li><a href="{{url('/')}}">OUIOUNON.NET</a></li>
+            <li><a href="{{url('/cytropfun/ouiounon')}}">OUIOUNON.NET</a></li>
         </ul>
         <li {{ Auth::check() ? '' : 'hidden' }} ><a href="{{url('/logout')}}">DECONNEXION</a></li>
     </ul>
