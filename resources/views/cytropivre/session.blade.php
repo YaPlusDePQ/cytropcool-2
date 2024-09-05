@@ -27,7 +27,7 @@
             <input name="_method" value="DELETE" readonly required hidden/>
             <input name="delete_session" value='delete_session' readonly required hidden/>
 
-            <button type="submit" class='session-action'>{{ $session->admin == Auth::user()->id ? 'Terminer la session' : 'Quitter la session'}}</button>
+            <button type="submit" class='session-action' onclick="return confirm('{{ $session->admin == Auth::user()->id ? 'Terminer la session ?' : 'Quitter la session ?'}}')">{{ $session->admin == Auth::user()->id ? 'Terminer la session' : 'Quitter la session'}}</button>
         </form>
 
     </div>
