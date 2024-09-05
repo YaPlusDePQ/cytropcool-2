@@ -2,16 +2,8 @@
 <div class="_before_inventory_{{$_INVENTORY_RUN->toDisplay->id}}">
     <{{$_INVENTORY_RUN->toDisplay->tag}} >
 
-    @if($_INVENTORY_RUN->toDisplay->tag == 'style')
-    ._before_inventory_{{$_INVENTORY_RUN->toDisplay->id}}{
-        @endif
+        {!!  str_replace(['&class-start&', '&class-end&'], ['._before_inventory_'.$_INVENTORY_RUN->toDisplay->id.'{', '}'], $_INVENTORY_RUN->toDisplay->data)  !!}
         
-        {!!$_INVENTORY_RUN->toDisplay->data!!}
-        
-        @if($_INVENTORY_RUN->toDisplay->tag == 'style')
-    }
-    <span>DEMO</span>
-    @endif
     </{{$_INVENTORY_RUN->toDisplay->tag}}>
 </div>
 <div>

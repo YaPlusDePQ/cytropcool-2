@@ -4,17 +4,9 @@
 </div>
 <div class="_after_inventory_{{$_INVENTORY_RUN->toDisplay->id}}">
     <{{$_INVENTORY_RUN->toDisplay->tag}}>
+        
+        {!!  str_replace(['&class-start&', '&class-end&'], ['._after_inventory_'.$_INVENTORY_RUN->toDisplay->id.'{', '}'], $_INVENTORY_RUN->toDisplay->data)  !!}
 
-    @if($_INVENTORY_RUN->toDisplay->tag == 'style')
-    ._after_inventory_{{$_INVENTORY_RUN->toDisplay->id}}{
-        @endif
-        
-        {!!$_INVENTORY_RUN->toDisplay->data!!}
-        
-        @if($_INVENTORY_RUN->toDisplay->tag == 'style')
-    }
-    <span>DEMO</span>
-    @endif
     </{{$_INVENTORY_RUN->toDisplay->tag}}>
 </div>
 @else

@@ -268,10 +268,10 @@ Route::post('/shop', function(Request $request){
  * ########################################################################
  */
 
-// Route::get('/debug/data-view', function () {
-//     return view('debug.data-view',['data'=>FriendController::getRequest()]);
-// })->middleware([StdAuth::class]);
+Route::get('/debug/data-view', function () {
+    return view('debug.data-view',['data'=>FriendController::getRequest()]);
+})->middleware([StdAuth::class]);
 
-// Route::get('/debug/test', function () {
-//     return view('debug.test');
-// });
+Route::get('/debug/test', function () {
+    return view('debug.test');
+});
