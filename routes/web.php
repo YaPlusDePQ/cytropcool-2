@@ -122,8 +122,8 @@ Route::get('/profile/{userID}', function (String $userID) {
     return view('account.public', [
         'user' => $user,
         'inventory' => $inventory,
-        'stats' => ProfileController::getStats(Auth::user()->id),
-        'ranks' => ProfileController::getRanks(Auth::user()->id),
+        'stats' => ProfileController::getStats($userID),
+        'ranks' => ProfileController::getRanks($userID),
         'inventoryCost' => $cost
     ]
     +HoldableController::displayHold([$userID], ['public_pseudo'])
