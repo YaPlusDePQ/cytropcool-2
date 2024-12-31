@@ -103,8 +103,8 @@
         <div id="shortcut" style="margin:10px">
             <div class="sh_wrapper">
                 <button onclick="ShortCut(25, 'Vodka', 35, 33, 1, 0);changeHideClass('on_custom', true);changeActive('sh', this)" class="sh pushed">Verre de 25cl 1/3 de Vodka</button>
-                <button onclick="ShortCut(2, 'Vodka', 35, 50, 1, 1);changeHideClass('on_custom', true);changeActive('sh', this)"  class="sh">Shot BDE</button>
-                <button onclick="ShortCut(4, 'Tequila', 35, 100, 1, 1);changeHideClass('on_custom', true);changeActive('sh', this)"  class="sh">Tek Paf</button>
+                <button onclick="ShortCut(3, 'Vodka', 35, 100, 1, 1);changeHideClass('on_custom', true);changeActive('sh', this)"  class="sh">Shot Vodka</button>
+                <button onclick="ShortCut(3, 'Tequila', 35, 100, 1, 1);changeHideClass('on_custom', true);changeActive('sh', this)"  class="sh">Tek Paf</button>
                 <button onclick="ShortCut(25,'Bière', 6, 100, 1, 0);changeHideClass('on_custom', true);changeActive('sh', this)"  class="sh">Bière 25cl</button>
                 <button onclick="ShortCut(50, 'Bière', 6, 100, 1, 0);changeHideClass('on_custom', true);changeActive('sh', this)"  class="sh">Bière 50cl</button>
                 
