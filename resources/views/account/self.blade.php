@@ -256,10 +256,7 @@
                                     <span class="stat-value"><span>{{ $session->glass }}</span></span>
                                     <span class="stat-description">Verre(s)</span>
                                 </li>
-                                </div>
-
                             </div>
-
                         </div>
                     @endforeach
                 @else
